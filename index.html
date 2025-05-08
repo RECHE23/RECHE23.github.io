@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title"></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3 { font-family: 'Roboto Mono', monospace; }
+    .hero-bg { 
+      @apply relative overflow-hidden bg-gradient-to-br from-blue-50 to-teal-100 dark:from-gray-900 dark:to-gray-800;
+      clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+    }
+    #tsparticles { position: absolute; inset: 0; z-index: 0; }
+    .hero-content { @apply relative z-10; }
+    .profile-img { 
+      border: 6px solid #e5e7eb; 
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+    .dark .profile-img {
+      border: 6px solid #fff;
+    }
+    .profile-img:hover { transform: scale(1.05); }
+    .nav-link {
+      @apply relative px-4 py-2 font-semibold text-gray-900 dark:text-gray-100 transition-colors;
+    }
+    .nav-link:hover::after { 
+      content: '';
+      @apply absolute bottom-0 left-0 w-full h-0.5 bg-teal-500 dark:bg-teal-400;
+    }
+    .card {
+      @apply bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl shadow-lg hover:shadow-2xl transition-all;
+    }
+    .card:hover {
+      @apply -translate-y-2 shadow-xl;
+    }
+    .section-title {
+      @apply relative inline-block text-3xl font-bold text-teal-600 dark:text-teal-400 mb-8;
+    }
+    .section-title::after { 
+      content: '';
+      @apply absolute bottom-0 left-0 w-12 h-1 bg-teal-500 dark:bg-teal-400 rounded;
+    }
+    .lang-toggle, .mode-toggle {
+      @apply bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-full shadow transition-colors hover:bg-gray-200 dark:hover:bg-gray-700;
+    }
+    .contact-icon {
+      @apply transition-transform duration-200 hover:text-teal-500 dark:hover:text-teal-400 hover:scale-110;
+    }
+    .terminal-box {
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 4px;
+      display: inline-block;
+      width: 100%;
+    }
+    .dark .terminal-box {
+      background: #2a2a2a;
+      border: 1px solid #4A90E2;
+    }
+    .prompt {
+      font-family: 'Courier New', monospace;
+      color: #333;
+      display: inline-block;
+      padding: 2px 6px;
+    }
+    .dark .prompt {
+      color: #0f0;
+    }
+    .typed-text {
+      font-family: 'Courier New', monospace;
+      color: #333;
+      padding: 2px 8px;
+      display: inline-block;
+    }
+    .dark .typed-text {
+      color: #0f0;
+    }
+    .typed-text::after {
+      content: '|';
+      color: #333;
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+    .dark .typed-text::after {
+      color: #0f0;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    .content-section:not(:last-child) {
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+    }
+    .dark .content-section:not(:last-child) {
+      border-bottom: 1px solid #374151;
+    }
+    @media (max-width: 768px) {
+      .hero-bg { clip-path: polygon(0 0, 100% 0, 100% 60%, 0 80%); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+  <!-- Language + Dark Mode Toggle -->
+  <div class="fixed top-4 right-4 z-50 flex space-x-2">
+    <button id="lang-toggle" class="lang-toggle">Français</button>
+    <button id="mode-toggle" class="mode-toggle"><i class="fas fa-moon"></i></button>
+  </div>
+
+  <!-- Hero Section -->
+  <header id="home" class="hero-bg text-gray-900 dark:text-white py-24">
+    <div id="tsparticles"></div>
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center hero-content">
+      <img id="profile-img" src="" alt="" class="profile-img w-56 h-56 rounded-full mb-6 md:mb-0 md:mr-8" data-aos="zoom-in">
+      <div class="text-center md:text-left" data-aos="fade-up">
+        <h1 id="hero-name" class="text-5xl font-bold mb-4"></h1>
+        <p class="terminal-box lang-en">
+          <span id="prompt-en" class="prompt"></span>
+          <span id="typed-text-en" class="typed-text"></span>
+        </p>
+        <p class="terminal-box lang-fr hidden">
+          <span id="prompt-fr" class="prompt"></span>
+          <span id="typed-text-fr" class="typed-text"></span>
+        </p>
+        <p id="hero-description" class="text-lg max-w-2xl mt-4"></p>
+        <div class="mt-6">
+          <a id="contact-button" href="#contact" class="bg-white dark:bg-teal-500 text-gray-800 dark:text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-200 dark:hover:opacity-90 transition"></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="bg-white dark:bg-gray-900 sticky top-0 z-40 shadow-md backdrop-blur-sm">
+    <div class="container mx-auto px-4 py-4">
+      <ul id="nav-list" class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-8"></ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-16">
+    <section id="cv" class="content-section mb-16" data-aos="fade-up">
+      <h2 id="cv-title" class="section-title"></h2>
+      <div class="card p-6">
+        <ul id="cv-list" class="space-y-4"></ul>
+      </div>
+    </section>
+
+    <section id="research" class="content-section mb-16" data-aos="fade-up">
+      <h2 id="research-title" class="section-title"></h2>
+      <div id="research-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </section>
+
+    <section id="publications" class="content-section mb-16" data-aos="fade-up">
+      <h2 id="publications-title" class="section-title"></h2>
+      <div class="card p-6">
+        <p id="publications-text" class="text-gray-600 dark:text-gray-400"></p>
+      </div>
+    </section>
+
+    <section id="projects" class="content-section mb-16" data-aos="fade-up">
+      <h2 id="projects-title" class="section-title"></h2>
+      <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <section id="contact" class="content-section mb-16" data-aos="fade-up">
+      <h2 id="contact-title" class="section-title"></h2>
+      <div class="card p-6">
+        <div id="contact-links" class="flex space-x-6 text-3xl"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p id="footer-text"></p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="data.js"></script>
+  <script>
+    // Navigation items
+    const navItems = [
+      { id: 'home', en: 'Home', fr: 'Accueil' },
+      { id: 'cv', en: 'CV', fr: 'CV' },
+      { id: 'research', en: 'Research', fr: 'Recherche' },
+      { id: 'publications', en: 'Publications', fr: 'Publications' },
+      { id: 'projects', en: 'Projects', fr: 'Projets' },
+      { id: 'contact', en: 'Contact', fr: 'Contact' }
+    ];
+
+    // Function to render navigation
+    function renderNav(lang) {
+      const navList = document.getElementById('nav-list');
+      navList.innerHTML = '';
+      navItems.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="#${item.id}" class="nav-link lang-${lang}">${item[lang]}</a>`;
+        navList.appendChild(li);
+      });
+    }
+
+    // Function to render content based on language
+    function renderContent(lang) {
+      document.getElementById('page-title').textContent = data.title?.[lang] || '';
+      document.getElementById('profile-img').src = data.profileImg || '';
+      document.getElementById('profile-img').alt = data.name || '';
+      document.getElementById('hero-name').textContent = data.name || '';
+      document.getElementById('prompt-en').textContent = data.hero?.prompt || '';
+      document.getElementById('prompt-fr').textContent = data.hero?.prompt || '';
+      document.getElementById('hero-description').textContent = data.hero?.description?.[lang] || '';
+      document.getElementById('contact-button').textContent = data.contact?.[lang] || '';
+
+      document.getElementById('cv-title').textContent = navItems.find(item => item.id === 'cv')[lang];
+      const cvList = document.getElementById('cv-list');
+      cvList.innerHTML = '';
+      if (data.cv?.[lang]) {
+        data.cv[lang].forEach(item => {
+          const li = document.createElement('li');
+          li.innerHTML = item;
+          cvList.appendChild(li);
+        });
+      }
+
+      document.getElementById('research-title').textContent = navItems.find(item => item.id === 'research')[lang];
+      const researchGrid = document.getElementById('research-grid');
+      researchGrid.innerHTML = '';
+      if (data.research?.[lang]) {
+        data.research[lang].forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'card p-6';
+          div.innerHTML = `
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${item.title}</h3>
+            <p class="text-gray-600 dark:text-gray-400">${item.description}</p>
+          `;
+          researchGrid.appendChild(div);
+        });
+      }
+
+      document.getElementById('publications-title').textContent = navItems.find(item => item.id === 'publications')[lang];
+      const publicationsText = document.getElementById('publications-text');
+      publicationsText.textContent = data.publications?.[lang] || '';
+
+      document.getElementById('projects-title').textContent = navItems.find(item => item.id === 'projects')[lang];
+      const projectsGrid = document.getElementById('projects-grid');
+      projectsGrid.innerHTML = '';
+      if (data.projects?.[lang]) {
+        data.projects[lang].forEach(project => {
+          const div = document.createElement('div');
+          div.className = 'card p-6';
+          div.innerHTML = `
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${project.name}</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-4">${project.description}</p>
+            <a href="${project.link}" target="_blank" class="text-teal-500 font-semibold hover:underline">View on GitHub</a>
+          `;
+          projectsGrid.appendChild(div);
+        });
+      }
+
+      document.getElementById('contact-title').textContent = navItems.find(item => item.id === 'contact')[lang];
+      const contactLinks = document.getElementById('contact-links');
+      contactLinks.innerHTML = '';
+      if (data.contact?.links) {
+        data.contact.links.forEach(link => {
+          const a = document.createElement('a');
+          a.href = link.url;
+          a.setAttribute('aria-label', link.label);
+          a.className = 'contact-icon';
+          a.innerHTML = `<i class="${link.icon}"></i>`;
+          contactLinks.appendChild(a);
+        });
+      }
+
+      document.getElementById('footer-text').textContent = data.footer?.[lang] || '';
+      renderNav(lang);
+    }
+
+    renderContent('en');
+
+    let typedEn, typedFr;
+    function initTyped(lang) {
+      if (typedEn) typedEn.destroy();
+      if (typedFr) typedFr.destroy();
+      if (lang === 'en' && data.hero?.jobTitles?.en) {
+        typedEn = new Typed('#typed-text-en', {
+          strings: data.hero.jobTitles.en,
+          typeSpeed: 60,
+          backSpeed: 30,
+          backDelay: 1000,
+          loop: true,
+          smartBackspace: true,
+          showCursor: false
+        });
+      } else if (lang === 'fr' && data.hero?.jobTitles?.fr) {
+        typedFr = new Typed('#typed-text-fr', {
+          strings: data.hero.jobTitles.fr,
+          typeSpeed: 60,
+          backSpeed: 30,
+          backDelay: 1000,
+          loop: true,
+          smartBackspace: true,
+          showCursor: false
+        });
+      }
+    }
+    initTyped('en');
+
+    const langToggle = document.getElementById('lang-toggle');
+    const enElements = document.querySelectorAll('.lang-en');
+    const frElements = document.querySelectorAll('.lang-fr');
+
+    function setLanguage(lang) {
+      renderContent(lang);
+      initTyped(lang);
+      if (lang === 'en') {
+        langToggle.textContent = 'Français';
+        enElements.forEach(el => el.classList.remove('hidden'));
+        frElements.forEach(el => el.classList.add('hidden'));
+      } else {
+        langToggle.textContent = 'English';
+        enElements.forEach(el => el.classList.add('hidden'));
+        frElements.forEach(el => el.classList.remove('hidden'));
+      }
+    }
+
+    langToggle.addEventListener('click', () => {
+      setLanguage(langToggle.textContent === 'Français' ? 'fr' : 'en');
+    });
+
+    const modeToggle = document.getElementById('mode-toggle');
+    const htmlEl = document.documentElement;
+    modeToggle.innerHTML = htmlEl.classList.contains('dark') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    modeToggle.addEventListener('click', () => {
+      htmlEl.classList.toggle('dark');
+      modeToggle.innerHTML = htmlEl.classList.contains('dark') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    });
+
+    document.querySelectorAll('.nav-link').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('section');
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (window.pageYOffset >= sectionTop - 100) {
+          current = section.getAttribute('id');
+        }
+      });
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('text-teal-500');
+        if (link.getAttribute('href').substring(1) === current) {
+          link.classList.add('text-teal-500');
+        }
+      });
+    });
+
+    tsParticles.load("tsparticles", {
+      fullScreen: { enable: false },
+      background: { color: "transparent" },
+      particles: {
+        number: { value: 60 },
+        color: { value: "#cccccc" },
+        shape: { type: "circle" },
+        opacity: { value: 0.4 },
+        size: { value: 2 },
+        move: { enable: true, speed: 0.8 },
+        links: {
+          enable: true,
+          distance: 100,
+          color: "#cccccc",
+          opacity: 0.3,
+          triangles: {
+            enable: true,
+            opacity: 0.2
+          }
+        }
+      }
+    });
+
+    AOS.init({ duration: 800, once: true });
+  </script>
+</body>
+</html>
