@@ -12,14 +12,14 @@
   <style>
     body { font-family: 'Inter', sans-serif; }
     h1, h2, h3 { font-family: 'Roboto Mono', monospace; }
-    .hero-bg { 
+    .hero-bg {
       @apply relative overflow-hidden bg-gradient-to-br from-blue-50 to-teal-100 dark:from-gray-900 dark:to-gray-800;
-      clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
     }
     #tsparticles { position: absolute; inset: 0; z-index: 0; }
     .hero-content { @apply relative z-10; }
-    .profile-img { 
-      border: 6px solid #e5e7eb; 
+    .profile-img {
+      border: 6px solid #e5e7eb;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease;
     }
@@ -30,7 +30,7 @@
     .nav-link {
       @apply relative px-4 py-2 font-semibold text-gray-900 dark:text-gray-100 transition-colors;
     }
-    .nav-link:hover::after { 
+    .nav-link:hover::after {
       content: '';
       @apply absolute bottom-0 left-0 w-full h-0.5 bg-teal-500 dark:bg-teal-400;
     }
@@ -43,23 +43,25 @@
     .section-title {
       @apply relative inline-block text-3xl font-bold text-teal-600 dark:text-teal-400 mb-8;
     }
-    .section-title::after { 
+    .section-title::after {
       content: '';
       @apply absolute bottom-0 left-0 w-12 h-1 bg-teal-500 dark:bg-teal-400 rounded;
     }
     .lang-toggle, .mode-toggle {
-      @apply bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-full shadow transition-colors hover:bg-gray-200 dark:hover:bg-gray-700;
+      @apply bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full shadow transition-colors hover:bg-gray-200 dark:hover:bg-gray-700;
     }
     .contact-icon {
       @apply transition-transform duration-200 hover:text-teal-500 dark:hover:text-teal-400 hover:scale-110;
     }
     .terminal-box {
       background: #f0f0f0;
-      border: 1px solid #ccc;
+      border: 1px solid #d1d5db;
       padding: 10px;
       border-radius: 4px;
-      display: inline-block;
+      display: block;
       width: 100%;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     .dark .terminal-box {
       background: #2a2a2a;
@@ -67,16 +69,17 @@
     }
     .prompt {
       font-family: 'Courier New', monospace;
-      color: #333;
+      color: #1f2937;
       display: inline-block;
       padding: 2px 6px;
+      white-space: normal;
     }
     .dark .prompt {
       color: #0f0;
     }
     .typed-text {
       font-family: 'Courier New', monospace;
-      color: #333;
+      color: #1f2937;
       padding: 2px 8px;
       display: inline-block;
     }
@@ -85,7 +88,7 @@
     }
     .typed-text::after {
       content: '|';
-      color: #333;
+      color: #1f2937;
       animation: blink 1s step-end infinite;
       margin-left: 2px;
     }
@@ -101,18 +104,134 @@
     .dark .content-section:not(:last-child) {
       border-bottom: 1px solid #374151;
     }
-    @media (max-width: 768px) {
-      .hero-bg { clip-path: polygon(0 0, 100% 0, 100% 60%, 0 80%); }
+    /* Mobile-specific adjustments */
+    @media (max-width: 640px) {
+      .hero-bg {
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 0 80%);
+        padding-bottom: 2rem;
+      }
+      .profile-img {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 1rem;
+      }
+      #hero-name { font-size: 1.75rem; }
+      #hero-description { font-size: 0.9rem; }
+      .terminal-box {
+        font-size: 0.75rem;
+        padding: 8px;
+      }
+      .prompt, .typed-text {
+        display: inline;
+        white-space: normal;
+      }
+      .hero-content { padding: 0 0.5rem; }
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .nav-toggle {
+        display: block;
+        font-size: 1.25rem;
+        padding: 0.5rem;
+        cursor: pointer;
+      }
+      #nav-list {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.95);
+        z-index: 100;
+        padding: 4rem 1rem 1rem;
+      }
+      .dark #nav-list {
+        background: rgba(17, 24, 39, 0.95);
+      }
+      #nav-list.active {
+        display: flex;
+      }
+      .nav-link {
+        padding: 1rem;
+        width: 100%;
+        text-align: center;
+        font-size: 1.25rem;
+      }
+      .card {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+      #research-grid, #projects-grid {
+        grid-template-columns: 1fr;
+      }
+      #contact-links {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+      }
+      #contact-links > a {
+        margin: 0;
+      }
+      .contact-icon { font-size: 3.5rem; }
+      .section-title { font-size: 1.75rem; }
+      main { padding: 0.5rem; }
+      .lang-toggle, .mode-toggle {
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+      }
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 100;
+        border-bottom-left-radius: 1.66em;
+        opacity: .8;
+      }
+    }
+    @media (min-width: 641px) {
+      .nav-toggle { display: none; }
+      #nav-list {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        position: static;
+        height: auto;
+        background: none;
+        padding: 0;
+        z-index: auto;
+      }
+      .top-bar {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0;
+        z-index: 100;
+        background: none;
+        background-color: transparent !important;
+      }
     }
   </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
   <!-- Language + Dark Mode Toggle -->
-  <div class="fixed top-4 right-4 z-50 flex space-x-2">
-    <button id="lang-toggle" class="lang-toggle">Français</button>
-    <button id="mode-toggle" class="mode-toggle"><i class="fas fa-moon"></i></button>
+  <div class="top-bar bg-white dark:bg-gray-900">
+    <div class="nav-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
+    <div class="flex space-x-2">
+      <button id="lang-toggle" class="lang-toggle">Français</button>
+      <button id="mode-toggle" class="mode-toggle"><i class="fas fa-moon"></i></button>
+    </div>
   </div>
-
   <!-- Hero Section -->
   <header id="home" class="hero-bg text-gray-900 dark:text-white py-24">
     <div id="tsparticles"></div>
@@ -135,14 +254,12 @@
       </div>
     </div>
   </header>
-
   <!-- Navigation -->
   <nav class="bg-white dark:bg-gray-900 sticky top-0 z-40 shadow-md backdrop-blur-sm">
     <div class="container mx-auto px-4 py-4">
       <ul id="nav-list" class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-8"></ul>
     </div>
   </nav>
-
   <!-- Main Content -->
   <main class="container mx-auto px-4 py-16">
     <section id="cv" class="content-section mb-16" data-aos="fade-up">
@@ -151,24 +268,20 @@
         <ul id="cv-list" class="space-y-4"></ul>
       </div>
     </section>
-
     <section id="research" class="content-section mb-16" data-aos="fade-up">
       <h2 id="research-title" class="section-title"></h2>
       <div id="research-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
     </section>
-
     <section id="publications" class="content-section mb-16" data-aos="fade-up">
       <h2 id="publications-title" class="section-title"></h2>
       <div class="card p-6">
         <p id="publications-text" class="text-gray-600 dark:text-gray-400"></p>
       </div>
     </section>
-
     <section id="projects" class="content-section mb-16" data-aos="fade-up">
       <h2 id="projects-title" class="section-title"></h2>
       <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
-
     <section id="contact" class="content-section mb-16" data-aos="fade-up">
       <h2 id="contact-title" class="section-title"></h2>
       <div class="card p-6">
@@ -176,14 +289,12 @@
       </div>
     </section>
   </main>
-
   <!-- Footer -->
   <footer class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white py-8">
     <div class="container mx-auto px-4 text-center">
       <p id="footer-text"></p>
     </div>
   </footer>
-
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
@@ -198,7 +309,6 @@
       { id: 'projects', en: 'Projects', fr: 'Projets' },
       { id: 'contact', en: 'Contact', fr: 'Contact' }
     ];
-
     // Function to render navigation
     function renderNav(lang) {
       const navList = document.getElementById('nav-list');
@@ -209,7 +319,6 @@
         navList.appendChild(li);
       });
     }
-
     // Function to render content based on language
     function renderContent(lang) {
       document.getElementById('page-title').textContent = data.title?.[lang] || '';
@@ -220,7 +329,6 @@
       document.getElementById('prompt-fr').textContent = data.hero?.prompt || '';
       document.getElementById('hero-description').textContent = data.hero?.description?.[lang] || '';
       document.getElementById('contact-button').textContent = data.contact?.[lang] || '';
-
       document.getElementById('cv-title').textContent = navItems.find(item => item.id === 'cv')[lang];
       const cvList = document.getElementById('cv-list');
       cvList.innerHTML = '';
@@ -231,7 +339,6 @@
           cvList.appendChild(li);
         });
       }
-
       document.getElementById('research-title').textContent = navItems.find(item => item.id === 'research')[lang];
       const researchGrid = document.getElementById('research-grid');
       researchGrid.innerHTML = '';
@@ -246,11 +353,9 @@
           researchGrid.appendChild(div);
         });
       }
-
       document.getElementById('publications-title').textContent = navItems.find(item => item.id === 'publications')[lang];
       const publicationsText = document.getElementById('publications-text');
       publicationsText.textContent = data.publications?.[lang] || '';
-
       document.getElementById('projects-title').textContent = navItems.find(item => item.id === 'projects')[lang];
       const projectsGrid = document.getElementById('projects-grid');
       projectsGrid.innerHTML = '';
@@ -261,12 +366,11 @@
           div.innerHTML = `
             <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${project.name}</h3>
             <p class="text-gray-600 dark:text-gray-400 mb-4">${project.description}</p>
-            <a href="${project.link}" target="_blank" class="text-teal-500 font-semibold hover:underline">View on GitHub</a>
+            <a href="${project.link}" target="_blank" class="text-teal-500 font-semibold hover:underline">${project.linkLabel || 'View on GitHub'}</a>
           `;
           projectsGrid.appendChild(div);
         });
       }
-
       document.getElementById('contact-title').textContent = navItems.find(item => item.id === 'contact')[lang];
       const contactLinks = document.getElementById('contact-links');
       contactLinks.innerHTML = '';
@@ -280,13 +384,10 @@
           contactLinks.appendChild(a);
         });
       }
-
       document.getElementById('footer-text').textContent = data.footer?.[lang] || '';
       renderNav(lang);
     }
-
     renderContent('en');
-
     let typedEn, typedFr;
     function initTyped(lang) {
       if (typedEn) typedEn.destroy();
@@ -314,11 +415,9 @@
       }
     }
     initTyped('en');
-
     const langToggle = document.getElementById('lang-toggle');
     const enElements = document.querySelectorAll('.lang-en');
     const frElements = document.querySelectorAll('.lang-fr');
-
     function setLanguage(lang) {
       renderContent(lang);
       initTyped(lang);
@@ -332,11 +431,9 @@
         frElements.forEach(el => el.classList.remove('hidden'));
       }
     }
-
     langToggle.addEventListener('click', () => {
       setLanguage(langToggle.textContent === 'Français' ? 'fr' : 'en');
     });
-
     const modeToggle = document.getElementById('mode-toggle');
     const htmlEl = document.documentElement;
     modeToggle.innerHTML = htmlEl.classList.contains('dark') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
@@ -344,16 +441,21 @@
       htmlEl.classList.toggle('dark');
       modeToggle.innerHTML = htmlEl.classList.contains('dark') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
     });
-
     document.querySelectorAll('.nav-link').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const targetId = this.getAttribute('href').substring(1);
         const targetElement = document.getElementById(targetId);
         targetElement.scrollIntoView({ behavior: 'smooth' });
+        if (window.innerWidth <= 640) {
+          document.getElementById('nav-list').classList.remove('active');
+        }
       });
     });
-
+    const navToggle = document.querySelector('.nav-toggle');
+    navToggle.addEventListener('click', () => {
+      document.getElementById('nav-list').classList.toggle('active');
+    });
     window.addEventListener('scroll', () => {
       const sections = document.querySelectorAll('section');
       let current = '';
@@ -370,7 +472,6 @@
         }
       });
     });
-
     tsParticles.load("tsparticles", {
       fullScreen: { enable: false },
       background: { color: "transparent" },
@@ -393,7 +494,6 @@
         }
       }
     });
-
     AOS.init({ duration: 800, once: true });
   </script>
 </body>
