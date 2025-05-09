@@ -121,6 +121,7 @@ nav::after {
   @apply transition-all duration-300;
   color: theme('colors.gray.600');
   cursor: pointer;
+  font-size: 3.5rem;
 }
 
 .dark .contact-icon {
@@ -402,15 +403,11 @@ nav::after {
   #contact-links {
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 1.5rem;
-  }
-
-  #contact-links > a {
-    margin: 0;
-  }
-
-  .contact-icon {
-    font-size: 3.5rem;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
   }
 
   .section-title {
@@ -475,5 +472,9 @@ nav::after {
   .dark .top-bar {
     background: theme('colors.darkBg.light');
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  #contact-links .card {
+    margin: 1em;
   }
 }

@@ -87,9 +87,11 @@ function renderContent(lang) {
   document.getElementById('contact-title').textContent = navItems.find(item => item.id === 'contact')[lang];
   const contactLinks = document.getElementById('contact-links');
   contactLinks.innerHTML = data.contact.links?.map(link => `
-    <a href="${link.url}" aria-label="${link.label}" class="contact-icon">
-      <i class="${link.icon}"></i>
-    </a>
+    <li class="card">
+      <a href="${link.url}" aria-label="${link.label}" class="contact-icon">
+        <i class="${link.icon}"></i>
+      </a>
+    </li>
   `).join('') || '';
 
   // Footer
