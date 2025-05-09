@@ -1,14 +1,19 @@
+/**
+ * Centralized data object for the portfolio website.
+ * Contains multilingual content (English and French) for various sections.
+ * Structure: Organized by section (title, hero, cv, etc.) with nested language-specific data.
+ */
 const data = {
   title: {
-    en: 'René Chenard – AI & Data Science',
-    fr: 'René Chenard – IA et Science des Données'
+    en: 'René Chenard – Computer Scientist & Mathematician',
+    fr: 'René Chenard – Informaticien-mathématicien'
   },
   profileImg: 'https://avatars.githubusercontent.com/u/59896725?v=4',
   name: 'René Chenard',
   hero: {
     description: {
-      en: 'Informatician–Mathematician passionate about advancing artificial intelligence, machine learning, and data analysis to solve complex problems.',
-      fr: 'Informaticien–Mathématicien passionné par l’avancement de l’intelligence artificielle, de l’apprentissage automatique et de l’analyse de données pour résoudre des problèmes complexes.'
+      en: 'Passionate about solving complex problems using algorithms, artificial intelligence, machine learning, and data analysis.',
+      fr: 'Passionné par la résolution de problèmes complexes à l’aide de l’algorithmique, de l’intelligence artificielle, de l’apprentissage automatique et de l’analyse de données.'
     },
     jobTitles: {
       en: [
@@ -34,7 +39,7 @@ const data = {
     ],
     fr: [
       '<strong>Professionnel de recherche</strong>, GIREF – Université Laval, Québec, Canada (2023–Présent)<br>– Développement HPC avec MPI, PETSc & SLEPc<br>– Création d’interfaces Python (PyBind11) & intégration de solveurs<br>– Analyse mémoire & QA (Valgrind, Sanitizer)',
-      '<strong>Stagiaire en éléments finis</strong>, GIREF – Université Laval, Québec, Canada (2021)<br>– Développement et validation d’algorithmes ancillaires<br>– Implémentation d\'expressions régulières<br>– Refactorisation de l\'engin de traitement des expressions algébriques',
+      '<strong>Stagiaire en éléments finis</strong>, GIREF – Université Laval, Québec, Canada (2021)<br>– Développement et validation d’algorithmes ancillaires<br>– Implémentation d’expressions régulières<br>– Refactorisation de l’engin de traitement des expressions algébriques',
       '<strong>Stagiaire en apprentissage automatique</strong>, GRAAL – Université Laval, Québec, Canada (2020)<br>– Prototypage et évaluation d’architectures de réseaux neuronaux'
     ]
   },
