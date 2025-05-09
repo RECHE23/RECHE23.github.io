@@ -146,11 +146,11 @@ function setLanguage(lang) {
   initTyped(lang);
 
   if (lang === 'en') {
-    langToggle.textContent = 'Français';
+    langToggle.querySelector('.lang-text').textContent = 'Français';
     enElements.forEach(el => el.classList.remove('hidden'));
     frElements.forEach(el => el.classList.add('hidden'));
   } else {
-    langToggle.textContent = 'English';
+    langToggle.querySelector('.lang-text').textContent = 'English';
     enElements.forEach(el => el.classList.add('hidden'));
     frElements.forEach(el => el.classList.remove('hidden'));
   }
@@ -163,16 +163,29 @@ function initialize() {
   // Language Toggle
   const langToggle = document.getElementById('lang-toggle');
   langToggle.addEventListener('click', () => {
-    setLanguage(langToggle.textContent === 'Français' ? 'fr' : 'en');
+    setLanguage(langToggle.querySelector('.lang-text').textContent === 'Français' ? 'fr' : 'en');
   });
 
   // Theme Toggle
   const modeToggle = document.getElementById('mode-toggle');
   const htmlEl = document.documentElement;
-  modeToggle.innerHTML = htmlEl.classList.contains('dark') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+  // Initialize theme button based on current theme
+  if (htmlEl.classList.contains('dark')) {
+    modeToggle.querySelector('i').className = 'fas fa-sun';
+    modeToggle.querySelector('.mode-text').textContent = 'Clair';
+  } else {
+    modeToggle.querySelector('i').className = 'fas fa-moon';
+    modeToggle.querySelector('.mode-text').textContent = 'Sombre';
+  }
   modeToggle.addEventListener('click', () => {
     htmlEl.classList.toggle('dark');
-    modeToggle.innerHTML = htmlEl.classList.contains('dark') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    if (htmlEl.classList.contains('dark')) {
+      modeToggle.querySelector('i').className = 'fas fa-sun';
+      modeToggle.querySelector('.mode-text').textContent = 'Clair';
+    } else {
+      modeToggle.querySelector('i').className = 'fas fa-moon';
+      modeToggle.querySelector('.mode-text').textContent = 'Sombre';
+    }
   });
 
   // Smooth Scrolling for Navigation

@@ -149,7 +149,7 @@ nav::after {
 
 .dark .card {
   background-color: theme('colors.darkBg.light');
-  border: 1px solid theme('colors.darkSecondary.dark');
+  border: 1px solid theme('colors English: rgba(15, 23, 42, 0.95)');
 }
 
 .card:hover {
@@ -185,7 +185,7 @@ nav::after {
 
 /* Toggle Buttons */
 .lang-toggle, .mode-toggle {
-  @apply px-4 py-2 rounded-full shadow transition-all duration-300;
+  @apply flex items-center px-4 py-2 rounded-full shadow transition-all duration-300;
   background-color: theme('colors.white');
   color: theme('colors.gray.700');
   cursor: pointer;
@@ -205,6 +205,14 @@ nav::after {
 
 .dark .lang-toggle:hover, .dark .mode-toggle:hover {
   background-color: theme('colors.darkSecondary.DEFAULT');
+}
+
+.lang-toggle i, .mode-toggle i {
+  @apply mr-2;
+}
+
+.lang-text, .mode-text {
+  @apply font-medium;
 }
 
 /* Terminal Box */
