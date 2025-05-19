@@ -56,7 +56,7 @@ function renderContent(lang) {
   // CV Section
   document.getElementById('cv-title').textContent = navItems.find(item => item.id === 'cv')[lang];
   const cvList = document.getElementById('cv-list');
-  cvList.innerHTML = data.cv[lang]?.map(item => `<li>${item}</li>`).join('') || '';
+  cvList.innerHTML = data.cv[lang]?.map(item => `<li class="p-3 card">${item}</li>`).join('') || '';
 
   // Research Section
   document.getElementById('research-title').textContent = navItems.find(item => item.id === 'research')[lang];
