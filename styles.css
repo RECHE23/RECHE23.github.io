@@ -474,7 +474,21 @@ nav::after {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
   }
 
+  .card {
+    padding: 0.75rem;
+  }
+
   #contact-links .card {
-    margin: 1em;
+    margin: 0.35em;
+  }
+
+  #contact-links {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
   }
 }
