@@ -11,6 +11,7 @@
 const navItems = [
   { id: 'home', en: 'Home', fr: 'Accueil' },
   { id: 'cv', en: 'CV', fr: 'CV' },
+  { id: 'education', en: 'Education', fr: 'Éducation' },
   { id: 'research', en: 'Research', fr: 'Recherche' },
   { id: 'publications', en: 'Publications', fr: 'Publications' },
   { id: 'projects', en: 'Projects', fr: 'Projets' },
@@ -41,7 +42,7 @@ const typedInstances = {
  * @returns {string} Language code ('fr' for French, 'en' for others).
  */
 function detectUserLanguage() {
-  const userLang = navigator.language || navigator.languages[0];
+  const userLang = navigator.language || navigator.languages?.[0] || 'en';
   return userLang.startsWith('fr') ? 'fr' : 'en';
 }
 
@@ -116,12 +117,59 @@ function renderContent(lang) {
     </li>
   `).join('') || '';
 
+  // Education Section
+  document.getElementById('education-title').textContent = navItems.find(item => item.id === 'education')[lang];
+  const educationList = document.getElementById('education-list');
+  educationList.innerHTML = data.education?.map((item, index) => `
+    <li class="card education-card relative p-6" data-aos="fade-up" data-aos-delay="${index * 100}">
+      <div class="education-short">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+          ${item.degree[lang]} | ${item.institution}
+        </h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
+        <p class="text-gray-600 dark:text-gray-400">${item.description[lang]}</p>
+      </div>
+      <div class="education-details hidden">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+          ${item.degree[lang]} | ${item.institution}
+        </h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
+        <p class="text-gray-600 dark:text-gray-400">${item.description[lang]}</p>
+      </div>
+      <button class="education-toggle-btn absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-darkPrimary-light">
+        <i class="fas fa-plus"></i>
+      </button>
+    </li>
+  `).join('') || '';
+
   // Initialize CV toggle buttons
   document.querySelectorAll('.cv-toggle-btn').forEach(button => {
     button.addEventListener('click', () => {
       const card = button.closest('.cv-card');
       const short = card.querySelector('.cv-short');
       const details = card.querySelector('.cv-details');
+      const icon = button.querySelector('i');
+
+      if (details.classList.contains('hidden')) {
+        short.classList.add('hidden');
+        details.classList.remove('hidden');
+        icon.classList.replace('fa-plus', 'fa-minus');
+        card.classList.add('expanded');
+      } else {
+        short.classList.remove('hidden');
+        details.classList.add('hidden');
+        icon.classList.replace('fa-minus', 'fa-plus');
+        card.classList.remove('expanded');
+      }
+    });
+  });
+
+  // Initialize Education toggle buttons
+  document.querySelectorAll('.education-toggle-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const card = button.closest('.education-card');
+      const short = card.querySelector('.education-short');
+      const details = card.querySelector('.education-details');
       const icon = button.querySelector('i');
 
       if (details.classList.contains('hidden')) {

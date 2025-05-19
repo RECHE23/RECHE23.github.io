@@ -31,6 +31,34 @@ const data = {
     },
     prompt: 'user@rene.chenard:~$'
   },
+  education: [
+    {
+      degree: {
+        en: 'Master’s in Mathematics (Ongoing)',
+        fr: 'Maîtrise en mathématiques (en cours)'
+      },
+      institution: 'Université Laval',
+      location: 'Québec, Canada',
+      period: '2023–Present',
+      description: {
+        en: 'Pursuing a Master’s degree in Mathematics as part of employment at GIREF, focusing on computational mathematics and high-performance computing.',
+        fr: 'Poursuite d’une maîtrise en mathématiques dans le cadre de l’emploi au GIREF, axée sur les mathématiques computationnelles et le calcul haute performance.'
+      }
+    },
+    {
+      degree: {
+        en: 'Bachelor’s in Mathematics and Computer Science',
+        fr: 'Baccalauréat intégré en mathématiques et informatique'
+      },
+      institution: 'Université Laval',
+      location: 'Québec, Canada',
+      period: '2018–2021',
+      description: {
+        en: 'Completed a Bachelor’s degree with a focus on algorithms, data structures, and applied mathematics.',
+        fr: 'Obtention d’un baccalauréat axé sur les algorithmes, les structures de données et les mathématiques appliquées.'
+      }
+    }
+  ],
   cv: [
     {
       role: {

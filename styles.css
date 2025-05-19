@@ -374,6 +374,75 @@ nav::after {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Education Cards */
+.education-card {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.education-card.expanded {
+  transform: scale(1.02);
+  box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.15);
+}
+
+.dark .education-card.expanded {
+  box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.3);
+}
+
+.education-toggle-btn {
+  background-color: theme('colors.gray.100');
+  color: theme('colors.gray.500');
+  visibility: hidden;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark .education-toggle-btn {
+  background-color: theme('colors.darkSecondary.dark');
+  color: theme('colors.gray.400');
+}
+
+.education-card:hover .education-toggle-btn {
+  visibility: visible;
+}
+
+.education-toggle-btn:hover {
+  background-color: theme('colors.primary.light');
+  color: theme('colors.primary.dark');
+}
+
+.dark .education-toggle-btn:hover {
+  background-color: theme('colors.darkPrimary.light');
+  color: theme('colors.darkPrimary.dark');
+}
+
+.education-details {
+  transition: opacity 0.5s ease, max-height 0.7s ease-in-out, transform 0.5s ease;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-10px);
+  overflow: hidden;
+}
+
+.education-details:not(.hidden) {
+  max-height: 800px; /* Adjust based on content */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.education-short {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.education-short.hidden {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
 /* Mobile Styles */
 @media (max-width: 767px) {
   .hero-bg {
