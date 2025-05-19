@@ -37,6 +37,23 @@ const typedInstances = {
 };
 
 /**
+ * Detects the user's preferred language based on browser settings.
+ * @returns {string} Language code ('fr' for French, 'en' for others).
+ */
+function detectUserLanguage() {
+  const userLang = navigator.language || navigator.languages[0];
+  return userLang.startsWith('fr') ? 'fr' : 'en';
+}
+
+/**
+ * Detects the user's preferred color scheme based on system settings.
+ * @returns {boolean} True if dark mode is preferred, false otherwise.
+ */
+function detectUserTheme() {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+/**
  * Renders the navigation menu based on the selected language.
  * @param {string} lang - Language code ('en' or 'fr').
  */
@@ -225,6 +242,26 @@ function setLanguage(lang) {
  * Initializes event listeners and third-party libraries.
  */
 function initialize() {
+  // Detect user preferences
+  const userLang = detectUserLanguage();
+  const isDarkMode = detectUserTheme();
+  const htmlEl = document.documentElement;
+  const modeToggle = document.getElementById('mode-toggle');
+
+  // Set initial theme based on user preference
+  if (isDarkMode) {
+    htmlEl.classList.add('dark');
+    modeToggle.querySelector('i').className = 'fas fa-sun';
+    modeToggle.querySelector('.mode-text').textContent = 'Clair';
+  } else {
+    htmlEl.classList.remove('dark');
+    modeToggle.querySelector('i').className = 'fas fa-moon';
+    modeToggle.querySelector('.mode-text').textContent = 'Sombre';
+  }
+
+  // Set initial language
+  setLanguage(userLang);
+
   // Language Toggle
   const langToggle = document.getElementById('lang-toggle');
   langToggle.addEventListener('click', () => {
@@ -232,16 +269,6 @@ function initialize() {
   });
 
   // Theme Toggle
-  const modeToggle = document.getElementById('mode-toggle');
-  const htmlEl = document.documentElement;
-  // Initialize theme button based on current theme
-  if (htmlEl.classList.contains('dark')) {
-    modeToggle.querySelector('i').className = 'fas fa-sun';
-    modeToggle.querySelector('.mode-text').textContent = 'Clair';
-  } else {
-    modeToggle.querySelector('i').className = 'fas fa-moon';
-    modeToggle.querySelector('.mode-text').textContent = 'Sombre';
-  }
   modeToggle.addEventListener('click', () => {
     htmlEl.classList.toggle('dark');
     if (htmlEl.classList.contains('dark')) {
@@ -313,6 +340,4 @@ function initialize() {
 }
 
 // Initialize page
-renderContent('en');
-initTyped('en');
 initialize();
