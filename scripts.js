@@ -1,282 +1,29 @@
 /**
  * Main JavaScript for the portfolio website.
- * Handles navigation rendering, multilingual content updates, theme toggling,
- * smooth scrolling, and animations using Typed.js, tsParticles, and AOS.
+ * Modular architecture with clear separation of concerns.
  */
 
-/**
- * Navigation items with multilingual labels.
- * @type {Array<{id: string, en: string, fr: string}>}
- */
-const navItems = [
-  { id: 'home', en: 'Home', fr: 'Accueil' },
-  { id: 'cv', en: 'CV', fr: 'CV' },
-  { id: 'education', en: 'Education', fr: 'Éducation' },
-  { id: 'research', en: 'Research', fr: 'Recherche' },
-  { id: 'publications', en: 'Publications', fr: 'Publications' },
-  { id: 'projects', en: 'Projects', fr: 'Projets' },
-  { id: 'contact', en: 'Contact', fr: 'Contact' }
-];
-
-/**
- * Section labels for CV details.
- * @type {{languages: {en: string, fr: string}, tools: {en: string, fr: string}, topics: {en: string, fr: string}}}
- */
-const sectionLabels = {
-  languages: { en: 'Languages', fr: 'Langages' },
-  tools: { en: 'Tools', fr: 'Outils' },
-  topics: { en: 'Topics', fr: 'Sujets' }
-};
-
-/**
- * Persistent Typed.js instances for English and French animations.
- * @type {{ en: Typed | null, fr: Typed | null }}
- */
-const typedInstances = {
-  en: null,
-  fr: null
-};
-
-/**
- * Detects the user's preferred language based on browser settings.
- * @returns {string} Language code ('fr' for French, 'en' for others).
- */
-function detectUserLanguage() {
-  const userLang = navigator.language || navigator.languages?.[0] || 'en';
-  return userLang.startsWith('fr') ? 'fr' : 'en';
-}
-
-/**
- * Detects the user's preferred color scheme based on system settings.
- * @returns {boolean} True if dark mode is preferred, false otherwise.
- */
-function detectUserTheme() {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches;
-}
-
-/**
- * Renders the navigation menu based on the selected language.
- * @param {string} lang - Language code ('en' or 'fr').
- */
-function renderNav(lang) {
-  const navList = document.getElementById('nav-list');
-  navList.innerHTML = navItems.map(item => `
-    <li><a href="#${item.id}" class="nav-link lang-${lang}">${item[lang]}</a></li>
-  `).join('');
-}
-
-/**
- * Renders all page content based on the selected language.
- * Updates DOM elements with data from the global `data` object.
- * @param {string} lang - Language code ('en' or 'fr').
- */
-function renderContent(lang) {
-  // Update basic elements
-  document.getElementById('page-title').textContent = data.title[lang] || '';
-  document.getElementById('profile-img').src = data.profileImg || '';
-  document.getElementById('profile-img').alt = data.name || '';
-  document.getElementById('hero-name').textContent = data.name || '';
-  document.getElementById('prompt-en').textContent = data.hero.prompt || '';
-  document.getElementById('prompt-fr').textContent = data.hero.prompt || '';
-  document.getElementById('hero-description').textContent = data.hero.description[lang] || '';
-  document.getElementById('contact-button').textContent = data.contact[lang] || '';
-
-  // CV Section
-  document.getElementById('cv-title').textContent = navItems.find(item => item.id === 'cv')[lang];
-  const cvList = document.getElementById('cv-list');
-  cvList.innerHTML = data.cv?.map((item, index) => `
-    <li class="card cv-card relative p-6" data-aos="fade-up" data-aos-delay="${index * 100}">
-      <div class="cv-short">
-        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
-          ${item.role[lang]} | ${item.organization}
-        </h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
-        <p class="text-gray-600 dark:text-gray-400">${item.shortDescription[lang]}</p>
-      </div>
-      <div class="cv-details hidden">
-        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
-          ${item.role[lang]} | ${item.organization}
-        </h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
-        <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 mb-4">
-          ${item.detailedDescription[lang].map(point => `<li>${point}</li>`).join('')}
-        </ul>
-        ${item.languages.length ? `
-          <p class="text-gray-600 dark:text-gray-400"><strong>${sectionLabels.languages[lang]}:</strong> ${item.languages.join(', ')}</p>
-        ` : ''}
-        ${item.tools.length ? `
-          <p class="text-gray-600 dark:text-gray-400"><strong>${sectionLabels.tools[lang]}:</strong> ${item.tools.join(', ')}</p>
-        ` : ''}
-        ${item.topics[lang].length ? `
-          <p class="text-gray-600 dark:text-gray-400"><strong>${sectionLabels.topics[lang]}:</strong> ${item.topics[lang].join(', ')}</p>
-        ` : ''}
-      </div>
-      <button class="cv-toggle-btn absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-darkPrimary-light">
-        <i class="fas fa-plus"></i>
-      </button>
-    </li>
-  `).join('') || '';
-
-  // Education Section
-  document.getElementById('education-title').textContent = navItems.find(item => item.id === 'education')[lang];
-  const educationList = document.getElementById('education-list');
-  educationList.innerHTML = data.education?.map((item, index) => `
-    <li class="card education-card relative p-6" data-aos="fade-up" data-aos-delay="${index * 100}">
-      <div class="education-short">
-        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
-          ${item.degree[lang]} | ${item.institution}
-        </h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
-        <p class="text-gray-600 dark:text-gray-400">${item.shortDescription[lang]}</p>
-      </div>
-      <div class="education-details hidden">
-        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
-          ${item.degree[lang]} | ${item.institution}
-        </h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
-        <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 mb-4">
-          ${item.detailedDescription[lang]?.map(point => '<li>' + point + '</li>').join('')}
-    </ul>
-    ${item.courses?.length ? `
-      <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">${lang === 'en' ? 'Courses Completed' : 'Cours suivis'}</h4>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-gray-600 dark:text-gray-400">
-          <thead>
-            <tr class="border-b dark:border-gray-700">
-              <th class="py-2 px-4">${lang === 'en' ? 'Code' : 'Code'}</th>
-              <th class="py-2 px-4">${lang === 'en' ? 'Title' : 'Titre'}</th>
-              <th class="py-2 px-4">${lang === 'en' ? 'Credits' : 'Crédits'}</th>
-              <th class="py-2 px-4">${lang === 'en' ? 'Grade' : 'Note'}</th>
-              <th class="py-2 px-4">${lang === 'en' ? 'Session' : 'Session'}</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${item.courses.map(course => `
-              <tr class="border-b dark:border-gray-700">
-                <td class="py-2 px-4">${course.code}</td>
-                <td class="py-2 px-4">${course.title[lang]}</td>
-                <td class="py-2 px-4">${course.credits}</td>
-                <td class="py-2 px-4">${course.grade}</td>
-                <td class="py-2 px-4">${course.session}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-    ` : ''}
-    </div>
-    <button class="education-toggle-btn absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-darkPrimary-light" aria-expanded="false">
-    <i class="fas fa-plus"></i>
-    </button>
-    </li>
-  `).join('') || '';
-
-  // Initialize CV toggle buttons
-  document.querySelectorAll('.cv-toggle-btn').forEach(button => {
-    button.addEventListener('click', () => {
-      const card = button.closest('.cv-card');
-      const short = card.querySelector('.cv-short');
-      const details = card.querySelector('.cv-details');
-      const icon = button.querySelector('i');
-
-      if (details.classList.contains('hidden')) {
-        short.classList.add('hidden');
-        details.classList.remove('hidden');
-        icon.classList.replace('fa-plus', 'fa-minus');
-        card.classList.add('expanded');
-      } else {
-        short.classList.remove('hidden');
-        details.classList.add('hidden');
-        icon.classList.replace('fa-minus', 'fa-plus');
-        card.classList.remove('expanded');
-      }
-    });
-  });
-
-  // Initialize Education toggle buttons
-  document.querySelectorAll('.education-toggle-btn').forEach(button => {
-    button.addEventListener('click', () => {
-      const card = button.closest('.education-card');
-      const short = card.querySelector('.education-short');
-      const details = card.querySelector('.education-details');
-      const icon = button.querySelector('i');
-
-      if (details.classList.contains('hidden')) {
-        short.classList.add('hidden');
-        details.classList.remove('hidden');
-        icon.classList.replace('fa-plus', 'fa-minus');
-        card.classList.add('expanded');
-        button.setAttribute('aria-expanded', 'true');
-      } else {
-        short.classList.remove('hidden');
-        details.classList.add('hidden');
-        icon.classList.replace('fa-minus', 'fa-plus');
-        card.classList.remove('expanded');
-        button.setAttribute('aria-expanded', 'false');
-      }
-    });
-  });
-
-  // Research Section
-  document.getElementById('research-title').textContent = navItems.find(item => item.id === 'research')[lang];
-  const researchGrid = document.getElementById('research-grid');
-  researchGrid.innerHTML = data.research[lang]?.map(item => `
-    <div class="card p-6" data-aos="fade-up">
-    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${item.title}</h3>
-    <p class="text-gray-600 dark:text-gray-400">${item.description}</p>
-    </div>
-  `).join('') || '';
-
-  // Publications Section
-  document.getElementById('publications-title').textContent = navItems.find(item => item.id === 'publications')[lang];
-  document.getElementById('publications-text').textContent = data.publications[lang] || '';
-
-  // Projects Section
-  document.getElementById('projects-title').textContent = navItems.find(item => item.id === 'projects')[lang];
-  const projectsGrid = document.getElementById('projects-grid');
-  projectsGrid.innerHTML = data.projects[lang]?.map(project => `
-    <div class="card p-6" data-aos="fade-up">
-    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${project.name}</h3>
-    <p class="text-gray-600 dark:text-gray-400 mb-4">${project.description}</p>
-    <a href="${project.link}" target="_blank" class="text-teal-500 font-semibold hover:underline">View on GitHub</a>
-    </div>
-  `).join('') || '';
-
-  // Contact Section
-  document.getElementById('contact-title').textContent = navItems.find(item => item.id === 'contact')[lang];
-  const contactLinks = document.getElementById('contact-links');
-  contactLinks.innerHTML = data.contact.links?.map(link => `
-    <li class="card">
-    <a href="${link.url}" aria-label="${link.label}" class="contact-icon">
-    <i class="${link.icon}"></i>
-    </a>
-    </li>
-  `).join('') || '';
-
-  // Footer
-  document.getElementById('footer-text').textContent = data.footer[lang] || '';
-
-  renderNav(lang);
-}
-
-/**
- * Initializes Typed.js for animated job title text.
- * @param {string} lang - Language code ('en' or 'fr').
- */
-function initTyped(lang) {
-  // Destroy existing instances and clear text content
-  if (typedInstances.en) {
-    typedInstances.en.destroy();
-    typedInstances.en = null;
-    document.getElementById('typed-text-en').textContent = '';
-  }
-  if (typedInstances.fr) {
-    typedInstances.fr.destroy();
-    typedInstances.fr = null;
-    document.getElementById('typed-text-fr').textContent = '';
-  }
-
-  const options = {
+// ==================== CONSTANTS ====================
+const CONFIG = {
+  navItems: [
+    { id: 'home', en: 'Home', fr: 'Accueil' },
+    { id: 'cv', en: 'CV', fr: 'CV' },
+    { id: 'education', en: 'Education', fr: 'Éducation' },
+    { id: 'research', en: 'Research', fr: 'Recherche' },
+    { id: 'publications', en: 'Publications', fr: 'Publications' },
+    { id: 'projects', en: 'Projects', fr: 'Projets' },
+    { id: 'contact', en: 'Contact', fr: 'Contact' }
+  ],
+  sectionLabels: {
+    languages: { en: 'Languages', fr: 'Langages' },
+    tools: { en: 'Tools', fr: 'Outils' },
+    topics: { en: 'Topics', fr: 'Sujets' }
+  },
+  courseHeaders: {
+    en: ['Code', 'Title', 'Credits', 'Grade', 'Session'],
+    fr: ['Code', 'Titre', 'Crédits', 'Note', 'Session']
+  },
+  typedOptions: {
     typeSpeed: 60,
     backSpeed: 30,
     backDelay: 1000,
@@ -284,117 +31,8 @@ function initTyped(lang) {
     smartBackspace: true,
     showCursor: true,
     cursorChar: '|'
-  };
-
-  // Initialize Typed instance for the selected language
-  if (lang === 'en' && data.hero.jobTitles.en) {
-    typedInstances.en = new Typed('#typed-text-en', { ...options, strings: data.hero.jobTitles.en });
-  } else if (lang === 'fr' && data.hero.jobTitles.fr) {
-    typedInstances.fr = new Typed('#typed-text-fr', { ...options, strings: data.hero.jobTitles.fr });
-  }
-}
-
-/**
- * Sets the page language and updates visibility of language-specific elements.
- * @param {string} lang - Language code ('en' or 'fr').
- */
-function setLanguage(lang) {
-  const langToggle = document.getElementById('lang-toggle');
-  const enElements = document.querySelectorAll('.lang-en');
-  const frElements = document.querySelectorAll('.lang-fr');
-
-  renderContent(lang);
-  initTyped(lang);
-
-  if (lang === 'en') {
-    langToggle.querySelector('.lang-text').textContent = 'Français';
-    enElements.forEach(el => el.classList.remove('hidden'));
-    frElements.forEach(el => el.classList.add('hidden'));
-  } else {
-    langToggle.querySelector('.lang-text').textContent = 'English';
-    enElements.forEach(el => el.classList.add('hidden'));
-    frElements.forEach(el => el.classList.remove('hidden'));
-  }
-}
-
-/**
- * Initializes event listeners and third-party libraries.
- */
-function initialize() {
-  // Detect user preferences
-  const userLang = detectUserLanguage();
-  const isDarkMode = detectUserTheme();
-  const htmlEl = document.documentElement;
-  const modeToggle = document.getElementById('mode-toggle');
-
-  // Set initial theme based on user preference
-  if (isDarkMode) {
-    htmlEl.classList.add('dark');
-    modeToggle.querySelector('i').className = 'fas fa-sun';
-    modeToggle.querySelector('.mode-text').textContent = 'Clair';
-  } else {
-    htmlEl.classList.remove('dark');
-    modeToggle.querySelector('i').className = 'fas fa-moon';
-    modeToggle.querySelector('.mode-text').textContent = 'Sombre';
-  }
-
-  // Set initial language
-  setLanguage(userLang);
-
-  // Language Toggle
-  const langToggle = document.getElementById('lang-toggle');
-  langToggle.addEventListener('click', () => {
-    setLanguage(langToggle.querySelector('.lang-text').textContent === 'Français' ? 'fr' : 'en');
-  });
-
-  // Theme Toggle
-  modeToggle.addEventListener('click', () => {
-    htmlEl.classList.toggle('dark');
-    if (htmlEl.classList.contains('dark')) {
-      modeToggle.querySelector('i').className = 'fas fa-sun';
-      modeToggle.querySelector('.mode-text').textContent = 'Clair';
-    } else {
-      modeToggle.querySelector('i').className = 'fas fa-moon';
-      modeToggle.querySelector('.mode-text').textContent = 'Sombre';
-    }
-  });
-
-  // Smooth Scrolling for Navigation
-  document.querySelectorAll('.nav-link').forEach(anchor => {
-    anchor.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetId = anchor.getAttribute('href').substring(1);
-      document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
-      if (window.innerWidth <= 767) {
-        document.getElementById('nav-list').classList.remove('active');
-      }
-    });
-  });
-
-  // Mobile Navigation Toggle
-  document.querySelector('.nav-toggle').addEventListener('click', () => {
-    document.getElementById('nav-list').classList.toggle('active');
-  });
-
-  // Active Navigation Link on Scroll
-  window.addEventListener('scroll', () => {
-    const sections = document.querySelectorAll('section');
-    let current = '';
-    sections.forEach(section => {
-      if (window.pageYOffset >= section.offsetTop - 100) {
-        current = section.getAttribute('id');
-      }
-    });
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.classList.remove('text-teal-500');
-      if (link.getAttribute('href').substring(1) === current) {
-        link.classList.add('text-teal-500');
-      }
-    });
-  });
-
-  // Initialize tsParticles
-  tsParticles.load('tsparticles', {
+  },
+  particlesConfig: {
     fullScreen: { enable: false },
     background: { color: 'transparent' },
     particles: {
@@ -412,11 +50,526 @@ function initialize() {
         triangles: { enable: true, opacity: 0.2 }
       }
     }
-  });
+  },
+  aosConfig: {
+    duration: 800,
+    once: true
+  }
+};
 
-  // Initialize AOS
-  AOS.init({ duration: 800, once: true });
+// ==================== STATE MANAGEMENT ====================
+const AppState = {
+  currentLanguage: 'en',
+  isDarkMode: false,
+  typedInstances: {
+    en: null,
+    fr: null
+  },
+
+  init() {
+    this.currentLanguage = this.detectUserLanguage();
+    this.isDarkMode = this.detectUserTheme();
+  },
+
+  detectUserLanguage() {
+    const userLang = navigator.language || navigator.languages?.[0] || 'en';
+    return userLang.startsWith('fr') ? 'fr' : 'en';
+  },
+
+  detectUserTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  },
+
+  toggleLanguage() {
+    this.currentLanguage = this.currentLanguage === 'en' ? 'fr' : 'en';
+    return this.currentLanguage;
+  },
+
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+    return this.isDarkMode;
+  }
+};
+
+// ==================== DOM UTILITIES ====================
+class DOMUtils {
+  static getElement(id) {
+    const element = document.getElementById(id);
+    if (!element) console.warn(`Element with ID "${id}" not found`);
+    return element;
+  }
+
+  static queryAll(selector, parent = document) {
+    return Array.from(parent.querySelectorAll(selector));
+  }
+
+  static toggleVisibility(element, isVisible) {
+    if (isVisible) {
+      element.classList.remove('hidden');
+    } else {
+      element.classList.add('hidden');
+    }
+  }
+
+  static setTextContent(element, text) {
+    if (element) element.textContent = text;
+  }
+
+  static setInnerHTML(element, html) {
+    if (element) element.innerHTML = html;
+  }
+
+  static addClass(element, className) {
+    element?.classList.add(className);
+  }
+
+  static removeClass(element, className) {
+    element?.classList.remove(className);
+  }
+
+  static toggleClass(element, className) {
+    element?.classList.toggle(className);
+  }
+
+  static replaceIcon(element, oldIcon, newIcon) {
+    if (element) {
+      const icon = element.querySelector('i');
+      if (icon) icon.classList.replace(oldIcon, newIcon);
+    }
+  }
 }
 
-// Initialize page
-initialize();
+// ==================== MODULES ====================
+class LanguageModule {
+  static init() {
+    this.setupLanguageToggle();
+    this.updateLanguage(AppState.currentLanguage);
+  }
+
+  static updateLanguage(lang) {
+    // Update UI elements
+    const langToggle = DOMUtils.getElement('lang-toggle');
+    DOMUtils.setTextContent(
+      langToggle.querySelector('.lang-text'),
+      lang === 'en' ? 'Français' : 'English'
+    );
+
+    // Toggle language-specific elements
+    DOMUtils.queryAll('.lang-en').forEach(el =>
+      DOMUtils.toggleVisibility(el, lang === 'en'));
+    DOMUtils.queryAll('.lang-fr').forEach(el =>
+      DOMUtils.toggleVisibility(el, lang === 'fr'));
+
+    // Update content
+    ContentRenderer.renderAll(lang);
+
+    // Update animations
+    AnimationModule.initTyped(lang);
+  }
+
+  static setupLanguageToggle() {
+    const langToggle = DOMUtils.getElement('lang-toggle');
+    langToggle?.addEventListener('click', () => {
+      const newLang = AppState.toggleLanguage();
+      this.updateLanguage(newLang);
+    });
+  }
+}
+
+class ThemeModule {
+  static init() {
+    this.setupThemeToggle();
+    this.updateTheme(AppState.isDarkMode);
+  }
+
+  static updateTheme(isDarkMode) {
+    const htmlEl = document.documentElement;
+    const modeToggle = DOMUtils.getElement('mode-toggle');
+
+    if (isDarkMode) {
+      DOMUtils.addClass(htmlEl, 'dark');
+      DOMUtils.replaceIcon(modeToggle, 'fa-moon', 'fa-sun');
+      DOMUtils.setTextContent(modeToggle.querySelector('.mode-text'), 'Clair');
+    } else {
+      DOMUtils.removeClass(htmlEl, 'dark');
+      DOMUtils.replaceIcon(modeToggle, 'fa-sun', 'fa-moon');
+      DOMUtils.setTextContent(modeToggle.querySelector('.mode-text'), 'Sombre');
+    }
+  }
+
+  static setupThemeToggle() {
+    const modeToggle = DOMUtils.getElement('mode-toggle');
+    modeToggle?.addEventListener('click', () => {
+      const newMode = AppState.toggleTheme();
+      this.updateTheme(newMode);
+    });
+  }
+}
+
+class NavigationModule {
+  static init() {
+    this.renderNavigation(AppState.currentLanguage);
+    this.setupEventListeners();
+  }
+
+  static renderNavigation(lang) {
+    const navList = DOMUtils.getElement('nav-list');
+    if (!navList) return;
+
+    const navHTML = CONFIG.navItems.map(item => `
+      <li>
+        <a href="#${item.id}" class="nav-link lang-${lang}">${item[lang]}</a>
+      </li>
+    `).join('');
+
+    DOMUtils.setInnerHTML(navList, navHTML);
+  }
+
+  static setupEventListeners() {
+    // Smooth scrolling
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('nav-link')) {
+        e.preventDefault();
+        const targetId = e.target.getAttribute('href').substring(1);
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+
+        // Close mobile menu if open
+        if (window.innerWidth <= 767) {
+          DOMUtils.removeClass(DOMUtils.getElement('nav-list'), 'active');
+        }
+      }
+    });
+
+    // Mobile toggle
+    document.querySelector('.nav-toggle')?.addEventListener('click', () => {
+      DOMUtils.toggleClass(DOMUtils.getElement('nav-list'), 'active');
+    });
+
+    // Active link on scroll
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  static handleScroll() {
+    const sections = document.querySelectorAll('section');
+    let currentSection = '';
+
+    sections.forEach(section => {
+      if (window.pageYOffset >= section.offsetTop - 100) {
+        currentSection = section.getAttribute('id');
+      }
+    });
+
+    DOMUtils.queryAll('.nav-link').forEach(link => {
+      const linkTarget = link.getAttribute('href').substring(1);
+      const isActive = linkTarget === currentSection;
+
+      // Remove the class from all links first
+      DOMUtils.removeClass(link, 'text-teal-500');
+
+      // Add it only to the active one
+      if (isActive) {
+        DOMUtils.addClass(link, 'text-teal-500');
+      }
+    });
+  }
+}
+
+class AnimationModule {
+  static init() {
+    this.initParticles();
+    this.initAOS();
+    this.initTyped(AppState.currentLanguage);
+  }
+
+  static destroyTypedInstances() {
+    Object.keys(AppState.typedInstances).forEach(lang => {
+      if (AppState.typedInstances[lang]) {
+        AppState.typedInstances[lang].destroy();
+        AppState.typedInstances[lang] = null;
+        DOMUtils.setTextContent(DOMUtils.getElement(`typed-text-${lang}`), '');
+      }
+    });
+  }
+
+  static initTyped(lang) {
+    this.destroyTypedInstances();
+
+    if (!data.hero?.jobTitles?.[lang]?.length) return;
+
+    AppState.typedInstances[lang] = new Typed(
+      `#typed-text-${lang}`,
+      {
+        ...CONFIG.typedOptions,
+        strings: data.hero.jobTitles[lang]
+      }
+    );
+  }
+
+  static initParticles() {
+    tsParticles.load('tsparticles', CONFIG.particlesConfig);
+  }
+
+  static initAOS() {
+    AOS.init(CONFIG.aosConfig);
+  }
+}
+
+class ContentRenderer {
+  static renderAll(lang) {
+    this.renderBasicElements(lang);
+    this.renderCVSection(lang);
+    this.renderEducationSection(lang);
+    this.renderResearchSection(lang);
+    this.renderPublicationsSection(lang);
+    this.renderProjectsSection(lang);
+    this.renderContactSection(lang);
+    this.renderFooter(lang);
+
+    NavigationModule.renderNavigation(lang);
+  }
+
+  static renderBasicElements(lang) {
+    DOMUtils.setTextContent(DOMUtils.getElement('page-title'), data.title[lang]);
+    DOMUtils.setTextContent(DOMUtils.getElement('hero-name'), data.name);
+    DOMUtils.setTextContent(DOMUtils.getElement('prompt-en'), data.hero.prompt);
+    DOMUtils.setTextContent(DOMUtils.getElement('prompt-fr'), data.hero.prompt);
+    DOMUtils.setTextContent(DOMUtils.getElement('hero-description'), data.hero.description[lang]);
+    DOMUtils.setTextContent(DOMUtils.getElement('contact-button'), data.contact[lang]);
+
+    const profileImg = DOMUtils.getElement('profile-img');
+    if (profileImg) {
+      profileImg.src = data.profileImg;
+      profileImg.alt = data.name;
+    }
+  }
+
+  static renderCVSection(lang) {
+    const sectionTitle = CONFIG.navItems.find(item => item.id === 'cv')[lang];
+    DOMUtils.setTextContent(DOMUtils.getElement('cv-title'), sectionTitle);
+
+    if (!data.cv?.length) return;
+
+    const cvHTML = data.cv.map((item, index) => this.renderCVItem(item, lang, index)).join('');
+    DOMUtils.setInnerHTML(DOMUtils.getElement('cv-list'), cvHTML);
+    this.setupToggleHandlers('.cv-card', '.cv-short', '.cv-details', '.cv-toggle-btn');
+  }
+
+  static renderCVItem(item, lang, index) {
+    return `
+      <li class="card cv-card relative p-6" data-aos="fade-up" data-aos-delay="${index * 100}">
+        ${this.renderShortView(item, lang, 'cv')}
+        ${this.renderDetailedView(item, lang, 'cv')}
+        <button class="cv-toggle-btn absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-darkPrimary-light">
+          <i class="fas fa-plus"></i>
+        </button>
+      </li>
+    `;
+  }
+
+  static renderEducationSection(lang) {
+    const sectionTitle = CONFIG.navItems.find(item => item.id === 'education')[lang];
+    DOMUtils.setTextContent(DOMUtils.getElement('education-title'), sectionTitle);
+
+    if (!data.education?.length) return;
+
+    const educationHTML = data.education.map((item, index) => this.renderEducationItem(item, lang, index)).join('');
+    DOMUtils.setInnerHTML(DOMUtils.getElement('education-list'), educationHTML);
+    this.setupToggleHandlers('.education-card', '.education-short', '.education-details', '.education-toggle-btn');
+  }
+
+  static renderEducationItem(item, lang, index) {
+    return `
+      <li class="card education-card relative p-6" data-aos="fade-up" data-aos-delay="${index * 100}">
+        ${this.renderShortView(item, lang, 'education')}
+        <div class="education-details hidden">
+          <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            ${item.degree[lang]} | ${item.institution}
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
+          ${item.detailedDescription[lang]?.length ? `
+            <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 mb-4">
+              ${item.detailedDescription[lang].map(point => `<li>${point}</li>`).join('')}
+            </ul>
+          ` : ''}
+      ${item.courses?.length ? this.renderCoursesTable(item.courses, lang) : ''}
+      </div>
+      <button class="education-toggle-btn absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-darkPrimary-light" aria-expanded="false">
+      <i class="fas fa-plus"></i>
+      </button>
+      </li>
+    `;
+  }
+
+  static renderShortView(item, lang, type) {
+    return `
+      <div class="${type}-short">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+          ${item[type === 'cv' ? 'role' : 'degree'][lang]} | ${item[type === 'cv' ? 'organization' : 'institution']}
+        </h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
+        <p class="text-gray-600 dark:text-gray-400">${item.shortDescription[lang]}</p>
+      </div>
+    `;
+  }
+
+  static renderDetailedView(item, lang, type) {
+    return `
+      <div class="${type}-details hidden">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+          ${item[type === 'cv' ? 'role' : 'degree'][lang]} | ${item[type === 'cv' ? 'organization' : 'institution']}
+        </h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
+        <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 mb-4">
+          ${item.detailedDescription[lang].map(point => `<li>${point}</li>`).join('')}
+        </ul>
+        ${item.languages?.length ? `
+          <p class="text-gray-600 dark:text-gray-400">
+            <strong>${CONFIG.sectionLabels.languages[lang]}:</strong> ${item.languages.join(', ')}
+          </p>
+        ` : ''}
+        ${item.tools?.length ? `
+          <p class="text-gray-600 dark:text-gray-400">
+            <strong>${CONFIG.sectionLabels.tools[lang]}:</strong> ${item.tools.join(', ')}
+          </p>
+        ` : ''}
+        ${item.topics?.[lang]?.length ? `
+          <p class="text-gray-600 dark:text-gray-400">
+            <strong>${CONFIG.sectionLabels.topics[lang]}:</strong> ${item.topics[lang].join(', ')}
+          </p>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  static renderCoursesTable(courses, lang) {
+    const headers = CONFIG.courseHeaders[lang];
+    return `
+      <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+        ${lang === 'en' ? 'Courses Completed' : 'Cours suivis'}
+      </h4>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-gray-600 dark:text-gray-400">
+          <thead>
+            <tr class="border-b dark:border-gray-700">
+              ${headers.map(header => `<th class="py-2 px-4">${header}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${courses.map(course => `
+              <tr class="border-b dark:border-gray-700">
+                <td class="py-2 px-4">${course.code}</td>
+                <td class="py-2 px-4">${course.title[lang]}</td>
+                <td class="py-2 px-4">${course.credits}</td>
+                <td class="py-2 px-4">${course.grade}</td>
+                <td class="py-2 px-4">${course.session}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  static renderResearchSection(lang) {
+    const sectionTitle = CONFIG.navItems.find(item => item.id === 'research')[lang];
+    DOMUtils.setTextContent(DOMUtils.getElement('research-title'), sectionTitle);
+
+    if (!data.research?.[lang]?.length) return;
+
+    const researchHTML = data.research[lang].map(item => `
+      <div class="card p-6" data-aos="fade-up">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${item.title}</h3>
+        <p class="text-gray-600 dark:text-gray-400">${item.description}</p>
+      </div>
+    `).join('');
+
+    DOMUtils.setInnerHTML(DOMUtils.getElement('research-grid'), researchHTML);
+  }
+
+  static renderPublicationsSection(lang) {
+    const sectionTitle = CONFIG.navItems.find(item => item.id === 'publications')[lang];
+    DOMUtils.setTextContent(DOMUtils.getElement('publications-title'), sectionTitle);
+    DOMUtils.setTextContent(DOMUtils.getElement('publications-text'), data.publications[lang]);
+  }
+
+  static renderProjectsSection(lang) {
+    const sectionTitle = CONFIG.navItems.find(item => item.id === 'projects')[lang];
+    DOMUtils.setTextContent(DOMUtils.getElement('projects-title'), sectionTitle);
+
+    if (!data.projects?.[lang]?.length) return;
+
+    const projectsHTML = data.projects[lang].map(project => `
+      <div class="card p-6" data-aos="fade-up">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${project.name}</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">${project.description}</p>
+        <a href="${project.link}" target="_blank" class="text-teal-500 font-semibold hover:underline">
+          ${lang === 'en' ? 'View on GitHub' : 'Voir sur GitHub'}
+        </a>
+      </div>
+    `).join('');
+
+    DOMUtils.setInnerHTML(DOMUtils.getElement('projects-grid'), projectsHTML);
+  }
+
+  static renderContactSection(lang) {
+    const sectionTitle = CONFIG.navItems.find(item => item.id === 'contact')[lang];
+    DOMUtils.setTextContent(DOMUtils.getElement('contact-title'), sectionTitle);
+
+    if (!data.contact?.links?.length) return;
+
+    const contactHTML = data.contact.links.map(link => `
+      <li class="card">
+        <a href="${link.url}" aria-label="${link.label}" class="contact-icon">
+          <i class="${link.icon}"></i>
+        </a>
+      </li>
+    `).join('');
+
+    DOMUtils.setInnerHTML(DOMUtils.getElement('contact-links'), contactHTML);
+  }
+
+  static renderFooter(lang) {
+    DOMUtils.setTextContent(DOMUtils.getElement('footer-text'), data.footer[lang]);
+  }
+
+  static setupToggleHandlers(cardSelector, shortSelector, detailsSelector, toggleBtnSelector) {
+    DOMUtils.queryAll(toggleBtnSelector).forEach(button => {
+      button.addEventListener('click', () => {
+        const card = button.closest(cardSelector);
+        const short = card.querySelector(shortSelector);
+        const details = card.querySelector(detailsSelector);
+
+        const isExpanded = !details.classList.contains('hidden');
+
+        // Toggle visibility
+        DOMUtils.toggleClass(short, 'hidden', isExpanded);
+        DOMUtils.toggleClass(details, 'hidden', !isExpanded);
+
+        // Update icon
+        DOMUtils.replaceIcon(button, isExpanded ? 'fa-minus' : 'fa-plus', isExpanded ? 'fa-plus' : 'fa-minus');
+
+        // Update card state
+        DOMUtils.toggleClass(card, 'expanded', !isExpanded);
+        button.setAttribute('aria-expanded', !isExpanded);
+      });
+    });
+  }
+}
+
+// ==================== INITIALIZATION ====================
+function initializeApp() {
+  // Initialize state
+  AppState.init();
+
+  // Initialize modules
+  ThemeModule.init();
+  LanguageModule.init();
+  NavigationModule.init();
+  AnimationModule.init();
+
+  // Initial content render
+  ContentRenderer.renderAll(AppState.currentLanguage);
+}
+
+// Start the application when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializeApp);
