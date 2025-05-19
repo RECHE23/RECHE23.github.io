@@ -18,6 +18,16 @@ const navItems = [
 ];
 
 /**
+ * Section labels for CV details.
+ * @type {{languages: {en: string, fr: string}, tools: {en: string, fr: string}, topics: {en: string, fr: string}}}
+ */
+const sectionLabels = {
+  languages: { en: 'Languages', fr: 'Langages' },
+  tools: { en: 'Tools', fr: 'Outils' },
+  topics: { en: 'Topics', fr: 'Sujets' }
+};
+
+/**
  * Persistent Typed.js instances for English and French animations.
  * @type {{ en: Typed | null, fr: Typed | null }}
  */
@@ -56,13 +66,66 @@ function renderContent(lang) {
   // CV Section
   document.getElementById('cv-title').textContent = navItems.find(item => item.id === 'cv')[lang];
   const cvList = document.getElementById('cv-list');
-  cvList.innerHTML = data.cv[lang]?.map(item => `<li class="p-3 card">${item}</li>`).join('') || '';
+  cvList.innerHTML = data.cv?.map((item, index) => `
+    <li class="card cv-card relative p-6" data-aos="fade-up" data-aos-delay="${index * 100}">
+      <div class="cv-short">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+          ${item.role[lang]} | ${item.organization}
+        </h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
+        <p class="text-gray-600 dark:text-gray-400">${item.shortDescription[lang]}</p>
+      </div>
+      <div class="cv-details hidden">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+          ${item.role[lang]} | ${item.organization}
+        </h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
+        <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 mb-4">
+          ${item.detailedDescription[lang].map(point => `<li>${point}</li>`).join('')}
+        </ul>
+        ${item.languages.length ? `
+          <p class="text-gray-600 dark:text-gray-400"><strong>${sectionLabels.languages[lang]}:</strong> ${item.languages.join(', ')}</p>
+        ` : ''}
+        ${item.tools.length ? `
+          <p class="text-gray-600 dark:text-gray-400"><strong>${sectionLabels.tools[lang]}:</strong> ${item.tools.join(', ')}</p>
+        ` : ''}
+        ${item.topics[lang].length ? `
+          <p class="text-gray-600 dark:text-gray-400"><strong>${sectionLabels.topics[lang]}:</strong> ${item.topics[lang].join(', ')}</p>
+        ` : ''}
+      </div>
+      <button class="cv-toggle-btn absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-darkPrimary-light">
+        <i class="fas fa-plus"></i>
+      </button>
+    </li>
+  `).join('') || '';
+
+  // Initialize CV toggle buttons
+  document.querySelectorAll('.cv-toggle-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const card = button.closest('.cv-card');
+      const short = card.querySelector('.cv-short');
+      const details = card.querySelector('.cv-details');
+      const icon = button.querySelector('i');
+
+      if (details.classList.contains('hidden')) {
+        short.classList.add('hidden');
+        details.classList.remove('hidden');
+        icon.classList.replace('fa-plus', 'fa-minus');
+        card.classList.add('expanded');
+      } else {
+        short.classList.remove('hidden');
+        details.classList.add('hidden');
+        icon.classList.replace('fa-minus', 'fa-plus');
+        card.classList.remove('expanded');
+      }
+    });
+  });
 
   // Research Section
   document.getElementById('research-title').textContent = navItems.find(item => item.id === 'research')[lang];
   const researchGrid = document.getElementById('research-grid');
   researchGrid.innerHTML = data.research[lang]?.map(item => `
-    <div class="card p-6">
+    <div class="card p-6" data-aos="fade-up">
       <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${item.title}</h3>
       <p class="text-gray-600 dark:text-gray-400">${item.description}</p>
     </div>
@@ -76,7 +139,7 @@ function renderContent(lang) {
   document.getElementById('projects-title').textContent = navItems.find(item => item.id === 'projects')[lang];
   const projectsGrid = document.getElementById('projects-grid');
   projectsGrid.innerHTML = data.projects[lang]?.map(project => `
-    <div class="card p-6">
+    <div class="card p-6" data-aos="fade-up">
       <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${project.name}</h3>
       <p class="text-gray-600 dark:text-gray-400 mb-4">${project.description}</p>
       <a href="${project.link}" target="_blank" class="text-teal-500 font-semibold hover:underline">View on GitHub</a>

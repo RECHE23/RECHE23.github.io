@@ -144,13 +144,14 @@ nav::after {
   @apply rounded-xl shadow-lg hover:shadow-xl transition-all duration-300;
   background-color: theme('colors.white');
   border: 1px solid theme('colors.gray.100');
+  border-radius: 0.5rem;
   cursor: pointer;
   overflow: hidden;
 }
 
 .dark .card {
   background-color: theme('colors.darkBg.light');
-  border: 1px solid theme('colors English: rgba(15, 23, 42, 0.95)');
+  border: 1px solid theme('colors.darkSecondary.dark');
 }
 
 .card:hover {
@@ -162,6 +163,69 @@ nav::after {
 .dark .card:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
   border-color: theme('colors.darkPrimary.light');
+}
+
+/* CV Cards */
+.cv-card {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.cv-card.expanded {
+  transform: scale(1.02);
+  box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.15);
+}
+
+.dark .cv-card.expanded {
+  box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.3);
+}
+
+.cv-toggle-btn {
+  background-color: theme('colors.gray.100');
+  color: theme('colors.gray.500');
+  visibility: hidden;
+}
+
+.dark .cv-toggle-btn {
+  background-color: theme('colors.darkSecondary.dark');
+  color: theme('colors.gray.400');
+}
+
+.cv-card:hover .cv-toggle-btn {
+  visibility: visible;
+}
+
+.cv-toggle-btn:hover {
+  background-color: theme('colors.primary.light');
+  color: theme('colors.primary.dark');
+}
+
+.dark .cv-toggle-btn:hover {
+  background-color: theme('colors.darkPrimary.light');
+  color: theme('colors.darkPrimary.dark');
+}
+
+.cv-details {
+  transition: opacity 0.5s ease, max-height 0.7s ease-in-out, transform 0.5s ease;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-10px);
+  overflow: hidden;
+}
+
+.cv-details:not(.hidden) {
+  max-height: 1200px; /* Increased to accommodate content */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cv-short {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.cv-short.hidden {
+  opacity: 0;
+  transform: translateY(10px);
 }
 
 /* Section Titles */
@@ -423,6 +487,11 @@ nav::after {
     padding: 0.5rem 1rem;
   }
 
+  .cv-toggle-btn {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
   .top-bar {
     display: flex;
     justify-content: space-between;
@@ -490,5 +559,10 @@ nav::after {
     text-align: center;
     justify-content: center;
     align-items: center;
+  }
+
+  .cv-toggle-btn {
+    font-size: 1.25rem;
+    padding: 0.75rem;
   }
 }

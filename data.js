@@ -31,18 +31,101 @@ const data = {
     },
     prompt: 'user@rene.chenard:~$'
   },
-  cv: {
-    en: [
-      '<strong>Research Professional</strong>, GIREF – Université Laval, Québec, Canada (2023–Present)<br>– HPC development with MPI, PETSc & SLEPc<br>– Python interface creation (PyBind11) & solver integration<br>– Memory analysis & QA (Valgrind, Sanitizer)',
-      '<strong>Finite-Element Research Intern</strong>, GIREF – Université Laval, Québec, Canada (2021)<br>– Development and validation of ancillary algorithms<br>– Implementation of regular expressions<br>– Refactoring of the algebraic expressions engine',
-      '<strong>Machine Learning Intern</strong>, GRAAL – Université Laval, Québec, Canada (2020)<br>– Prototyped and evaluated neural network architectures'
-    ],
-    fr: [
-      '<strong>Professionnel de recherche</strong>, GIREF – Université Laval, Québec, Canada (2023–Présent)<br>– Développement HPC avec MPI, PETSc & SLEPc<br>– Création d’interfaces Python (PyBind11) & intégration de solveurs<br>– Analyse mémoire & QA (Valgrind, Sanitizer)',
-      '<strong>Stagiaire en éléments finis</strong>, GIREF – Université Laval, Québec, Canada (2021)<br>– Développement et validation d’algorithmes ancillaires<br>– Implémentation d’expressions régulières<br>– Refactorisation de l’engin de traitement des expressions algébriques',
-      '<strong>Stagiaire en apprentissage automatique</strong>, GRAAL – Université Laval, Québec, Canada (2020)<br>– Prototypage et évaluation d’architectures de réseaux neuronaux'
-    ]
-  },
+  cv: [
+    {
+      role: {
+        en: 'Research Professional',
+        fr: 'Professionnel de recherche'
+      },
+      organization: 'GIREF – Université Laval',
+      location: 'Québec, Canada',
+      period: '2023–Present',
+      shortDescription: {
+        en: 'Developed high-performance computing solutions and Python interfaces.',
+        fr: 'Développement de solutions HPC et interfaces Python.'
+      },
+      detailedDescription: {
+        en: [
+          'Designed and implemented HPC workflows using MPI, PETSc, and SLEPc for large-scale simulations.',
+          'Created Python interfaces with PyBind11 for solver integration.',
+          'Performed memory analysis and quality assurance using Valgrind and Sanitizer.'
+        ],
+        fr: [
+          'Conception et mise en œuvre de workflows HPC avec MPI, PETSc et SLEPc pour simulations à grande échelle.',
+          'Création d’interfaces Python avec PyBind11 pour intégration de solveurs.',
+          'Analyse mémoire et assurance qualité avec Valgrind et Sanitizer.'
+        ]
+      },
+      languages: ['C/C++', 'Python', 'Bash', 'LaTeX', 'Markdown', 'HTML/CSS/JS', 'CMake/Makefile'],
+      tools: ['PETSc', 'SLEPc', 'CPython/PyBind11', 'Valgrind', 'Sanitizer', 'Git', 'SSH'],
+      topics: {
+        en: ['High-Performance Computing', 'Solver Integration', 'Python Binding', 'Memory Analysis', 'CI/CD'],
+        fr: ['Calcul haute performance', 'Intégration de solveurs', 'Inerface Python', 'Analyse mémoire', 'CI/CD']
+      }
+    },
+    {
+      role: {
+        en: 'Finite-Element Research Intern',
+        fr: 'Stagiaire en éléments finis'
+      },
+      organization: 'GIREF – Université Laval',
+      location: 'Québec, Canada',
+      period: '2021',
+      shortDescription: {
+        en: 'Developed and validated algorithms for finite-element simulations.',
+        fr: 'Développement et validation d’algorithmes pour simulations par éléments finis.'
+      },
+      detailedDescription: {
+        en: [
+          'Developed and validated ancillary algorithms for finite-element methods.',
+          'Implemented regular expressions for data inputs parsing.',
+          'Refactored the algebraic expressions engine for improved performance.'
+        ],
+        fr: [
+          'Développement et validation d’algorithmes ancillaires pour méthodes par éléments finis.',
+          'Implémentation d’expressions régulières pour le traitement des mises en données.',
+          'Refactorisation de l’engin de traitement des expressions algébriques pour meilleures performances.'
+        ]
+      },
+      languages: ['C/C++', 'Python', 'Regex', 'LaTeX'],
+      tools: ['Valgrind', 'Git', 'SSH'],
+      topics: {
+        en: ['Finite-Element Methods', 'Regular Expressions', 'Algorithm Optimization'],
+        fr: ['Méthodes par éléments finis', 'Expressions régulières', 'Optimisation d’algorithmes']
+      }
+    },
+    {
+      role: {
+        en: 'Machine Learning Intern',
+        fr: 'Stagiaire en apprentissage automatique'
+      },
+      organization: 'GRAAL – Université Laval',
+      location: 'Québec, Canada',
+      period: '2020',
+      shortDescription: {
+        en: 'Prototyped neural network architectures for machine learning tasks.',
+        fr: 'Prototypage d’architectures de réseaux neuronaux pour tâches d’apprentissage.'
+      },
+      detailedDescription: {
+        en: [
+          'Prototyped and evaluated neural network architectures for classification tasks.',
+          'Optimized model performance using hyperparameter tuning.',
+          'Analyzed datasets to improve model accuracy.'
+        ],
+        fr: [
+          'Prototypage et évaluation d’architectures de réseaux neuronaux pour tâches de classification.',
+          'Optimisation des performances des modèles par réglage des hyperparamètres.',
+          'Analyse de datasets pour améliorer la précision des modèles.'
+        ]
+      },
+      languages: ['Python'],
+      tools: ['PyTorch', 'Scikit-learn', 'NumPy', 'Pandas', 'Matplotlib', 'Jupyter Notebooks'],
+      topics: {
+        en: ['Machine Learning', 'Neural Networks', 'Data Analysis', 'Dimensionality Reduction'],
+        fr: ['Apprentissage automatique', 'Réseaux neuronaux', 'Analyse de données', 'Réduction de dimensionnalité']
+      }
+    }
+  ],
   research: {
     en: [
       {
