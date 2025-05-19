@@ -429,7 +429,7 @@ nav::after {
 }
 
 .education-details:not(.hidden) {
-  max-height: 800px; /* Adjust based on content */
+  max-height: 100%;
   opacity: 1;
   transform: translateY(0);
 }
@@ -441,6 +441,53 @@ nav::after {
 .education-short.hidden {
   opacity: 0;
   transform: translateY(10px);
+}
+
+/* Education Course Table */
+.education-details table {
+  @apply min-w-full border-collapse;
+}
+
+.education-details th,
+.education-details td {
+  @apply text-sm;
+}
+
+.education-details th {
+  @apply font-semibold text-gray-800 dark:text-gray-200;
+}
+
+.education-details td {
+  @apply text-gray-600 dark:text-gray-400;
+}
+
+.education-details tr:hover {
+  @apply bg-gray-50 dark:bg-darkSecondary-dark;
+}
+
+.education-details .border-b {
+  @apply border-gray-200 dark:border-gray-700;
+}
+
+.education-details .overflow-x-auto {
+  @apply border border-gray-200 dark:border-gray-700 rounded-lg;
+}
+
+.education-details .overflow-x-auto::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.education-details .overflow-x-auto::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800 rounded;
+}
+
+.education-details .overflow-x-auto::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 dark:bg-gray-600 rounded;
+}
+
+.education-details .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500 dark:bg-gray-500;
 }
 
 /* Mobile Styles */

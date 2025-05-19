@@ -127,18 +127,47 @@ function renderContent(lang) {
           ${item.degree[lang]} | ${item.institution}
         </h3>
         <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
-        <p class="text-gray-600 dark:text-gray-400">${item.description[lang]}</p>
+        <p class="text-gray-600 dark:text-gray-400">${item.shortDescription[lang]}</p>
       </div>
       <div class="education-details hidden">
         <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
           ${item.degree[lang]} | ${item.institution}
         </h3>
         <p class="text-gray-600 dark:text-gray-400 mb-2">${item.location} (${item.period})</p>
-        <p class="text-gray-600 dark:text-gray-400">${item.description[lang]}</p>
+        <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 mb-4">
+          ${item.detailedDescription[lang]?.map(point => '<li>' + point + '</li>').join('')}
+    </ul>
+    ${item.courses?.length ? `
+      <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">${lang === 'en' ? 'Courses Completed' : 'Cours suivis'}</h4>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-gray-600 dark:text-gray-400">
+          <thead>
+            <tr class="border-b dark:border-gray-700">
+              <th class="py-2 px-4">${lang === 'en' ? 'Code' : 'Code'}</th>
+              <th class="py-2 px-4">${lang === 'en' ? 'Title' : 'Titre'}</th>
+              <th class="py-2 px-4">${lang === 'en' ? 'Credits' : 'Crédits'}</th>
+              <th class="py-2 px-4">${lang === 'en' ? 'Grade' : 'Note'}</th>
+              <th class="py-2 px-4">${lang === 'en' ? 'Session' : 'Session'}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${item.courses.map(course => `
+              <tr class="border-b dark:border-gray-700">
+                <td class="py-2 px-4">${course.code}</td>
+                <td class="py-2 px-4">${course.title[lang]}</td>
+                <td class="py-2 px-4">${course.credits}</td>
+                <td class="py-2 px-4">${course.grade}</td>
+                <td class="py-2 px-4">${course.session}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
       </div>
-      <button class="education-toggle-btn absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-darkPrimary-light">
-        <i class="fas fa-plus"></i>
-      </button>
+    ` : ''}
+    </div>
+    <button class="education-toggle-btn absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-darkPrimary-light" aria-expanded="false">
+    <i class="fas fa-plus"></i>
+    </button>
     </li>
   `).join('') || '';
 
@@ -177,11 +206,13 @@ function renderContent(lang) {
         details.classList.remove('hidden');
         icon.classList.replace('fa-plus', 'fa-minus');
         card.classList.add('expanded');
+        button.setAttribute('aria-expanded', 'true');
       } else {
         short.classList.remove('hidden');
         details.classList.add('hidden');
         icon.classList.replace('fa-minus', 'fa-plus');
         card.classList.remove('expanded');
+        button.setAttribute('aria-expanded', 'false');
       }
     });
   });
@@ -191,8 +222,8 @@ function renderContent(lang) {
   const researchGrid = document.getElementById('research-grid');
   researchGrid.innerHTML = data.research[lang]?.map(item => `
     <div class="card p-6" data-aos="fade-up">
-      <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${item.title}</h3>
-      <p class="text-gray-600 dark:text-gray-400">${item.description}</p>
+    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${item.title}</h3>
+    <p class="text-gray-600 dark:text-gray-400">${item.description}</p>
     </div>
   `).join('') || '';
 
@@ -205,9 +236,9 @@ function renderContent(lang) {
   const projectsGrid = document.getElementById('projects-grid');
   projectsGrid.innerHTML = data.projects[lang]?.map(project => `
     <div class="card p-6" data-aos="fade-up">
-      <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${project.name}</h3>
-      <p class="text-gray-600 dark:text-gray-400 mb-4">${project.description}</p>
-      <a href="${project.link}" target="_blank" class="text-teal-500 font-semibold hover:underline">View on GitHub</a>
+    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">${project.name}</h3>
+    <p class="text-gray-600 dark:text-gray-400 mb-4">${project.description}</p>
+    <a href="${project.link}" target="_blank" class="text-teal-500 font-semibold hover:underline">View on GitHub</a>
     </div>
   `).join('') || '';
 
@@ -216,9 +247,9 @@ function renderContent(lang) {
   const contactLinks = document.getElementById('contact-links');
   contactLinks.innerHTML = data.contact.links?.map(link => `
     <li class="card">
-      <a href="${link.url}" aria-label="${link.label}" class="contact-icon">
-        <i class="${link.icon}"></i>
-      </a>
+    <a href="${link.url}" aria-label="${link.label}" class="contact-icon">
+    <i class="${link.icon}"></i>
+    </a>
     </li>
   `).join('') || '';
 
