@@ -177,7 +177,7 @@ const data = {
       tools: ['PETSc', 'SLEPc', 'CPython/PyBind11', 'Valgrind', 'Sanitizer', 'Git', 'SSH'],
       topics: {
         en: ['High-Performance Computing', 'Solver Integration', 'Python Binding', 'Memory Analysis', 'CI/CD'],
-        fr: ['Calcul haute performance', 'Intégration de solveurs', 'Inerface Python', 'Analyse mémoire', 'CI/CD']
+        fr: ['Calcul haute performance', 'Intégration de solveurs', 'Interface Python', 'Analyse mémoire', 'CI/CD']
       }
     },
     {
