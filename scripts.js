@@ -535,6 +535,7 @@ class ContentRenderer {
   static setupToggleHandlers(cardSelector, shortSelector, detailsSelector, toggleBtnSelector) {
     DOMUtils.queryAll(toggleBtnSelector).forEach(button => {
       button.addEventListener('click', () => {
+        e.stopPropagation();
         const card = button.closest(cardSelector);
         const short = card.querySelector(shortSelector);
         const details = card.querySelector(detailsSelector);
@@ -550,6 +551,23 @@ class ContentRenderer {
 
         // Update card state
         DOMUtils.toggleClass(card, 'expanded', !isExpanded);
+        button.setAttribute('aria-expanded', !isExpanded);
+      });
+    });
+
+    // Add click handler for the entire card
+    DOMUtils.queryAll(cardSelector).forEach(card => {
+      card.addEventListener('click', () => {
+        const short = card.querySelector(shortSelector);
+        const details = card.querySelector(detailsSelector);
+        const button = card.querySelector(toggleBtnSelector);
+
+        const isExpanded = !details.classList.contains('hidden');
+
+        DOMUtils.toggleClass(short, 'hidden', isExpanded);
+        DOMUtils.toggleClass(details, 'hidden', !isExpanded);
+        DOMUtils.toggleClass(card, 'expanded', !isExpanded);
+        DOMUtils.replaceIcon(button, isExpanded ? 'fa-minus' : 'fa-plus', isExpanded ? 'fa-plus' : 'fa-minus');
         button.setAttribute('aria-expanded', !isExpanded);
       });
     });
