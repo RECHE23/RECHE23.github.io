@@ -8,6 +8,7 @@
  * 2. Component styles
  * 3. Utility classes
  * 4. Responsive overrides
+ * 5. Print styles
  */
 
 /* ============ BASE STYLES ============ */
@@ -124,7 +125,6 @@ nav::after {
 }
 
 /* Sections */
-
 .content-section:not(:last-child) {
   border-bottom: 1px solid #e2e8f0;
   padding-bottom: 2rem;
@@ -165,6 +165,7 @@ nav::after {
 .cv-card,
 .education-card {
   position: relative;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
@@ -183,14 +184,8 @@ nav::after {
 .cv-toggle-btn,
 .education-toggle-btn {
   @apply transition-all duration-300;
-  background-color: theme('colors.gray.100');
+  background: none;
   color: theme('colors.gray.500');
-}
-
-.dark .cv-toggle-btn,
-.dark .education-toggle-btn {
-  background-color: theme('colors.darkSecondary.dark');
-  color: theme('colors.gray.400');
 }
 
 .cv-card:hover .cv-toggle-btn,
@@ -200,14 +195,14 @@ nav::after {
 
 .cv-toggle-btn:hover,
 .education-toggle-btn:hover {
-  background-color: theme('colors.primary.light');
-  color: theme('colors.primary.dark');
+  background-color: theme('colors.gray.200');
+  color: theme('colors.gray.600');
 }
 
 .dark .cv-toggle-btn:hover,
 .dark .education-toggle-btn:hover {
-  background-color: theme('colors.darkPrimary.light');
-  color: theme('colors.darkPrimary.dark');
+  background-color: theme('colors.darkSecondary.DEFAULT');
+  color: theme('colors.gray.300');
 }
 
 /* Expandable Content */
@@ -389,8 +384,241 @@ nav::after {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* ============ PRINT STYLES ============ */
+@media print {
+  /* Reset all elements to remove backgrounds and ensure clean styling */
+  *,
+  *::before,
+  *::after {
+    background: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    color: #000000 !important;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-size: 10pt;
+    line-height: 1.6;
+    color: #000;
+    background: #fff;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    margin: 1cm;
+    orphans: 2;
+    widows: 2;
+  }
+
+  /* Single-column layout */
+  main, .content-section, #cv, #education {
+    display: block !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  #cv, #education {
+    margin-bottom: 0.6cm;
+  }
+
+  /* Header within CV section */
+  #cv::before {
+    display: block;
+    font-size: 18pt;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0.5cm;
+    padding-bottom: 0.2cm;
+    border-bottom: 0.5pt solid #666;
+    white-space: pre;
+  }
+
+  .top-bar, nav, #hero, #hero *, #research, #publications, #projects, #contact, footer, .terminal-box, #tsparticles, .primary-button, [id*="typed-text"] {
+    display: none !important;
+  }
+
+  .content-section {
+    border: none !important;
+    padding: 0.4cm 0 !important;
+    margin-bottom: 0.6cm !important;
+    width: calc(100% - 1cm);
+    page-break-inside: avoid;
+  }
+
+  .content-section:not(:last-child) {
+    border-bottom: none !important;
+  }
+
+  .section-title {
+    font-size: 16pt;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-weight: bold;
+    margin-bottom: 0.3cm;
+    color: #000;
+    padding-bottom: 0.1cm;
+    border-bottom: 0.5pt solid #666;
+    text-transform: uppercase;
+  }
+
+  .section-title + p {
+    font-size: 9pt;
+    font-style: italic;
+    margin-bottom: 0.3cm;
+    text-align: justify;
+    width: 100%;
+  }
+
+  .section-title::after {
+    display: none;
+  }
+
+  h3 {
+    font-size: 11pt;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-weight: bold;
+    margin-bottom: 0.15cm;
+    margin-top: 0.3cm;
+  }
+
+  p, ul, li {
+    font-size: 9pt;
+    color: #000;
+    margin-bottom: 0.2cm;
+    text-align: justify;
+    font-variant-ligatures: none;
+    font-weight: normal;
+  }
+
+  ul {
+    margin-bottom: 0.3cm;
+    list-style-type: disc;
+    padding-left: 0.4cm;
+  }
+
+  .card {
+    border: none !important;
+    padding: 0.3cm 0 !important;
+    margin-bottom: 0.4cm !important;
+    transform: none !important;
+    cursor: default !important;
+    width: 100%;
+    box-shadow: none !important;
+  }
+
+  .cv-card, .education-card {
+    page-break-inside: avoid;
+    margin-bottom: 0.4cm;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .cv-card:not(:last-child), .education-card:not(:last-child) {
+    border-bottom: none !important;
+    padding-bottom: 0.3cm;
+  }
+
+  .cv-card + .cv-card, .education-card + .education-card {
+    margin-top: 0.3cm;
+    padding-top: 0.2cm;
+  }
+
+  .cv-short, .education-short {
+    display: none !important;
+  }
+
+  .cv-details, .education-details, .cv-details *, .education-details * {
+    font-size: 9pt;
+    max-height: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    display: block !important;
+    color: #000 !important;
+    width: 100%;
+  }
+
+  .cv-toggle-btn, .education-toggle-btn, .cv-details br, .education-details br, .cv-details::before, .education-details::before, .cv-details::after, .education-details::after {
+    display: none !important;
+  }
+
+  .cv-details p, .education-details p {
+    margin-bottom: 0.2cm;
+    width: 100%;
+  }
+
+  .cv-details strong, .education-details strong {
+    font-weight: bold;
+  }
+
+  .education-details .overflow-x-auto {
+    border: none !important;
+    overflow: visible !important;
+    width: 100%;
+    page-break-inside: avoid;
+    width: 100%;
+  }
+
+  .education-details table {
+    display: table !important;
+    table-layout: fixed;
+    width: 100vw;
+    margin: 0.4cm 0;
+    border-collapse: collapse;
+    font-size: 8pt;
+  }
+
+  .education-details table,
+  .education-details table * {
+    display: table-cell !important;
+    box-sizing: border-box;
+    font_variant-ligatures: none;
+    font-weight: normal;
+  }
+
+  .education-details thead {
+    display: table-header-group !important;
+  }
+
+  .education-details tbody {
+    display: table-row-group !important;
+  }
+
+  .education-details tr {
+    display: table-row !important;
+  }
+
+  .education-details th, .education-details td {
+    border: 1px solid #000;
+    padding: 0.15cm;
+    font-size: 10pt;
+    vertical-align: top;
+    text-align: left;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .education-details th {
+    font-weight: bold;
+    background: #f5f5f5 !important;
+    text-align: left;
+  }
+
+  .education-details tr:hover {
+    background: none !important;
+  }
+
+  /* Explicit column widths for table */
+  .education-details th:nth-child(1), .education-details td:nth-child(1) { width: 16% !important; }
+  .education-details th:nth-child(2), .education-details td:nth-child(2) { width: 53% !important; }
+  .education-details th:nth-child(3), .education-details td:nth-child(3) { width: 10% !important; }
+  .education-details th:nth-child(4), .education-details td:nth-child(4) { width: 8% !important; }
+  .education-details th:nth-child(5), .education-details td:nth-child(5) { width: 13% !important; }
+}
+
 /* ============ RESPONSIVE OVERRIDES ============ */
 @media (max-width: 767px) {
+  .cv-card, .education-card { cursor: pointer; }
   .cv-toggle-btn,
   .education-toggle-btn {
     visibility: visible;
@@ -536,6 +764,7 @@ nav::after {
 }
 
 @media (min-width: 768px) {
+  .cv-card, .education-card { cursor: pointer; }
   .cv-toggle-btn,
   .education-toggle-btn {
     visibility: hidden;
