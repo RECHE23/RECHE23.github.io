@@ -23,6 +23,10 @@ const CONFIG = {
     en: ['Code', 'Title', 'Credits', 'Grade', 'Session'],
     fr: ['Code', 'Titre', 'Crédits', 'Note', 'Session']
   },
+  themeLabels: {
+    dark: { en: 'Dark', fr: 'Sombre' },
+    light: { en: 'Light', fr: 'Clair' }
+  },
   typedOptions: {
     typeSpeed: 60,
     backSpeed: 30,
@@ -165,6 +169,9 @@ class LanguageModule {
 
     // Update animations
     AnimationModule.initTyped(lang);
+
+    // Update theme button text
+    ThemeModule.updateTheme(AppState.isDarkMode);
   }
 
   static setupLanguageToggle() {
@@ -185,15 +192,16 @@ class ThemeModule {
   static updateTheme(isDarkMode) {
     const htmlEl = document.documentElement;
     const modeToggle = DOMUtils.getElement('mode-toggle');
+    const lang = AppState.currentLanguage;
 
     if (isDarkMode) {
       DOMUtils.addClass(htmlEl, 'dark');
       DOMUtils.replaceIcon(modeToggle, 'fa-moon', 'fa-sun');
-      DOMUtils.setTextContent(modeToggle.querySelector('.mode-text'), 'Clair');
+      DOMUtils.setTextContent(modeToggle.querySelector('.mode-text'), CONFIG.themeLabels.light[lang]);
     } else {
       DOMUtils.removeClass(htmlEl, 'dark');
       DOMUtils.replaceIcon(modeToggle, 'fa-sun', 'fa-moon');
-      DOMUtils.setTextContent(modeToggle.querySelector('.mode-text'), 'Sombre');
+      DOMUtils.setTextContent(modeToggle.querySelector('.mode-text'), CONFIG.themeLabels.dark[lang]);
     }
   }
 
@@ -391,11 +399,11 @@ class ContentRenderer {
               ${item.detailedDescription[lang].map(point => `<li>${point}</li>`).join('')}
             </ul>
           ` : ''}
-      ${item.courses?.length ? this.renderCoursesTable(item.courses, lang) : ''}
-      </div>
-      <button class="education-toggle-btn absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-darkPrimary-light" aria-expanded="false">
-      <i class="fas fa-plus"></i>
-      </button>
+          ${item.courses?.length ? this.renderCoursesTable(item.courses, lang) : ''}
+        </div>
+        <button class="education-toggle-btn absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-darkPrimary-light" aria-expanded="false">
+          <i class="fas fa-plus"></i>
+        </button>
       </li>
     `;
   }
@@ -534,7 +542,7 @@ class ContentRenderer {
 
   static setupToggleHandlers(cardSelector, shortSelector, detailsSelector, toggleBtnSelector) {
     DOMUtils.queryAll(toggleBtnSelector).forEach(button => {
-      button.addEventListener('click', () => {
+      button.addEventListener('click', (e) => {
         e.stopPropagation();
         const card = button.closest(cardSelector);
         const short = card.querySelector(shortSelector);
